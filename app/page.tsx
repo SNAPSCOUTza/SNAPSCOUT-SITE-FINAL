@@ -16,13 +16,13 @@ import {
   Eye,
   Award,
   Youtube,
-  Camera,
+  UserPlus,
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { Facebook } from "lucide-react"
-import { BackgroundBeams } from "@/components/ui/background-beams" // Import the BackgroundBeams component
-import { PreviewButtonWithRedHover } from "@/components/ui/preview-button-with-red-hover" // Import the new button
+import { BackgroundBeams } from "@/components/ui/background-beams"
+import { PreviewButtonWithRedHover } from "@/components/ui/preview-button-with-red-hover"
 import { useState, useEffect } from "react"
 import Preloader from "@/components/ui/preloader"
 import { motion } from "framer-motion"
@@ -61,17 +61,23 @@ export default function SnapScoutLanding() {
                 </div>
               </div>
 
-              <div className="flex items-center space-x-4"></div>
+              <nav className="flex items-center space-x-6">
+                <Link href="/find-crew" className="text-gray-600 hover:text-red-700 transition-colors font-medium">
+                  Find Film Crew
+                </Link>
+                <Button asChild className="bg-red-700 hover:bg-red-800">
+                  <Link href="/auth/signup">
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Join as Pro
+                  </Link>
+                </Button>
+              </nav>
             </div>
           </header>
 
           {/* Hero Section */}
           <section className="relative overflow-hidden py-20 sm:py-32 bg-white">
-            {" "}
-            {/* Added bg-gray-900 for better contrast with beams */}
-            {/* Background Beams */}
-            <BackgroundBeams className="absolute inset-0 w-full h-full max-w-none" />{" "}
-            {/* BackgroundBeams component as background */}
+            <BackgroundBeams className="absolute inset-0 w-full h-full max-w-none" />
             <div className="relative z-10">
               <div className="container mx-auto px-4">
                 <div className="mx-auto max-w-4xl text-center">
@@ -119,6 +125,12 @@ export default function SnapScoutLanding() {
                     >
                       Preview
                     </PreviewButtonWithRedHover>
+                    <Button asChild variant="outline" className="h-11 px-6 bg-transparent">
+                      <Link href="/auth/signup">
+                        <UserPlus className="h-4 w-4 mr-2" />
+                        Create Your Profile
+                      </Link>
+                    </Button>
                   </motion.div>
 
                   <motion.p
@@ -193,36 +205,32 @@ export default function SnapScoutLanding() {
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute top-3 right-3">
-                        <Badge className="bg-white/90 text-gray-700">Photography</Badge>
+                        <Badge className="bg-white/90 text-gray-700">Camera - DP</Badge>
                       </div>
                     </div>
                     <CardHeader className="pb-2">
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-lg">Sarah Chen</CardTitle>
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium">4.9</span>
-                        </div>
+                        <Badge className="bg-green-100 text-green-800 text-xs">Available</Badge>
                       </div>
-                      <CardDescription>Portrait & Event Photography</CardDescription>
+                      <CardDescription>Director of Photography</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
                         <div className="flex items-center space-x-1">
                           <Eye className="h-4 w-4" />
-                          <span>127 projects</span>
+                          <span>5 years exp</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Heart className="h-4 w-4" />
-                          <span>98% satisfaction</span>
+                          <span>Senior Level</span>
                         </div>
                       </div>
                       <p className="text-sm text-gray-600 mb-4">
-                        Specializing in authentic moments and natural lighting. Available for weddings, corporate
-                        events, and portraits.
+                        DP with a love for moody lighting & guerrilla shoots. RED Komodo owner, fluent in drone ops.
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-lg">From $150/hr</span>
+                        <span className="font-semibold text-lg">From R2500/day</span>
                         <Button size="sm" variant="outline" disabled>
                           Coming Soon
                         </Button>
@@ -235,7 +243,7 @@ export default function SnapScoutLanding() {
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
                   viewport={{ once: true }}
                 >
                   <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
@@ -248,36 +256,33 @@ export default function SnapScoutLanding() {
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute top-3 right-3">
-                        <Badge className="bg-white/90 text-gray-700">Videography</Badge>
+                        <Badge className="bg-white/90 text-gray-700">Audio - Sound Engineer</Badge>
                       </div>
                     </div>
                     <CardHeader className="pb-2">
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-lg">Marcus Rodriguez</CardTitle>
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium">5.0</span>
-                        </div>
+                        <Badge className="bg-yellow-100 text-yellow-800 text-xs">Booked</Badge>
                       </div>
-                      <CardDescription>Brand & Product Videos</CardDescription>
+                      <CardDescription>Sound Engineer & Mixer</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
                         <div className="flex items-center space-x-1">
                           <Eye className="h-4 w-4" />
-                          <span>89 projects</span>
+                          <span>8 years exp</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Heart className="h-4 w-4" />
-                          <span>100% satisfaction</span>
+                          <span>Senior Level</span>
                         </div>
                       </div>
                       <p className="text-sm text-gray-600 mb-4">
-                        Creating compelling brand stories through cinematic visuals. Expert in product launches and
-                        commercial content.
+                        Netflix's Blood & Water - Sound Engineer. Owns full Zoom F8n setup, specializes in location
+                        recording.
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-lg">From $300/day</span>
+                        <span className="font-semibold text-lg">From R1800/day</span>
                         <Button size="sm" variant="outline" disabled>
                           Coming Soon
                         </Button>
@@ -290,7 +295,7 @@ export default function SnapScoutLanding() {
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
                   viewport={{ once: true }}
                 >
                   <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
@@ -303,36 +308,33 @@ export default function SnapScoutLanding() {
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute top-3 right-3">
-                        <Badge className="bg-white/90 text-gray-700">Design</Badge>
+                        <Badge className="bg-white/90 text-gray-700">Camera - 1st AC</Badge>
                       </div>
                     </div>
                     <CardHeader className="pb-2">
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-lg">Emma Thompson</CardTitle>
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span className="text-sm font-medium">4.8</span>
-                        </div>
+                        <Badge className="bg-green-100 text-green-800 text-xs">Available</Badge>
                       </div>
-                      <CardDescription>Social Media & Brand Design</CardDescription>
+                      <CardDescription>1st Assistant Camera</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
                         <div className="flex items-center space-x-1">
                           <Eye className="h-4 w-4" />
-                          <span>203 projects</span>
+                          <span>4 years exp</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Heart className="h-4 w-4" />
-                          <span>96% satisfaction</span>
+                          <span>Mid Level</span>
                         </div>
                       </div>
                       <p className="text-sm text-gray-600 mb-4">
-                        Crafting scroll-stopping visuals for social media and brand campaigns. Specializing in Instagram
-                        and TikTok content.
+                        KFC Commercial 2023 - 1st AC. Steadicam certified, owns wireless follow focus system. Fluent in
+                        English & Afrikaans.
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="font-semibold text-lg">From $75/post</span>
+                        <span className="font-semibold text-lg">From R1200/day</span>
                         <Button size="sm" variant="outline" disabled>
                           Coming Soon
                         </Button>
@@ -343,7 +345,7 @@ export default function SnapScoutLanding() {
               </div>
 
               <div className="text-center mt-12">
-                <Button size="lg" variant="outline" className="px-8" disabled>
+                <Button size="lg" variant="outline" className="px-8 bg-transparent" disabled>
                   Launching Soon
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -375,48 +377,48 @@ export default function SnapScoutLanding() {
                     {index === 0 && (
                       <>
                         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 mx-auto mb-6">
-                          <Search className="h-8 w-8 text-red-700" />
+                          <UserPlus className="h-8 w-8 text-red-700" />
                         </div>
-                        <h3 className="text-xl font-semibold mb-4">1. Discover Local Talent</h3>
+                        <h3 className="text-xl font-semibold mb-4">1. Create Your Profile</h3>
                         <p className="text-gray-600">
-                          Explore curated portfolios from verified local creatives in your area. Filter by style,
-                          location, and budget to find your perfect local match.
+                          Sign up for R60/month and create your professional profile with credits, gear, rates, and
+                          social links.
                         </p>
                       </>
                     )}
                     {index === 1 && (
                       <>
                         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 mx-auto mb-6">
-                          <MessageCircle className="h-8 w-8 text-red-700" />
+                          <Search className="h-8 w-8 text-red-700" />
                         </div>
-                        <h3 className="text-xl font-semibold mb-4">2. Connect & Plan</h3>
+                        <h3 className="text-xl font-semibold mb-4">2. Get Discovered</h3>
                         <p className="text-gray-600">
-                          Message creators directly to discuss your project. Share your vision and get custom proposals
-                          with transparent pricing.
+                          Clients find you through our directory, filtering by department, location, experience level,
+                          and availability.
                         </p>
                       </>
                     )}
                     {index === 2 && (
                       <>
                         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 mx-auto mb-6">
-                          <CheckCircle className="h-8 w-8 text-red-700" />
+                          <MessageCircle className="h-8 w-8 text-red-700" />
                         </div>
-                        <h3 className="text-xl font-semibold mb-4">3. Book & Create</h3>
+                        <h3 className="text-xl font-semibold mb-4">3. Connect & Plan</h3>
                         <p className="text-gray-600">
-                          Secure your booking with protected payments. Collaborate seamlessly and receive your stunning
-                          content on time.
+                          Clients contact you directly based on your rates, availability, and past work. No bidding or
+                          competition.
                         </p>
                       </>
                     )}
                     {index === 3 && (
                       <>
                         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 mx-auto mb-6">
-                          <Camera className="h-8 w-8 text-red-700" />
+                          <CheckCircle className="h-8 w-8 text-red-700" />
                         </div>
-                        <h3 className="text-xl font-semibold mb-4">4. Gear & Studio Rental</h3>
+                        <h3 className="text-xl font-semibold mb-4">4. Book & Create</h3>
                         <p className="text-gray-600">
-                          Access a marketplace for local gear and studio rentals. Find the equipment and space you need
-                          to bring your creative vision to life.
+                          Secure your booking with transparent pricing. Work on amazing projects and build your
+                          professional network.
                         </p>
                       </>
                     )}
@@ -461,18 +463,12 @@ export default function SnapScoutLanding() {
                     {index === 0 && (
                       <Card className="bg-white border-0 shadow-lg">
                         <CardHeader>
-                          <div className="flex items-center space-x-1 mb-2">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
-                          <CardTitle className="text-lg">Found our perfect photographer</CardTitle>
+                          <CardTitle className="text-lg">Found our perfect DP</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <p className="text-gray-600 mb-4">
-                            "SnapScout helped us find an amazing photographer for our product launch. The quality of
-                            work was incredible, and the booking process was so smooth. No more guessing based on
-                            follower counts!"
+                            "SnapScout helped us find an amazing DP for our commercial. We could see their exact rates,
+                            gear, and past credits upfront. No more guessing or endless back-and-forth!"
                           </p>
                           <div className="flex items-center space-x-3">
                             <Image
@@ -493,18 +489,12 @@ export default function SnapScoutLanding() {
                     {index === 1 && (
                       <Card className="bg-white border-0 shadow-lg">
                         <CardHeader>
-                          <div className="flex items-center space-x-1 mb-2">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
-                          <CardTitle className="text-lg">Game-changer for creators</CardTitle>
+                          <CardTitle className="text-lg">Game-changer for crew</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <p className="text-gray-600 mb-4">
-                            "As a creator, I love that clients can see my actual work first. I've booked more quality
-                            projects through SnapScout than any other platform. It's refreshing to be valued for my
-                            craft!"
+                            "Finally, a platform where my experience and gear matter more than social media followers.
+                            I've been booked consistently since joining. Clients can see my real credentials!"
                           </p>
                           <div className="flex items-center space-x-3">
                             <Image
@@ -516,7 +506,7 @@ export default function SnapScoutLanding() {
                             />
                             <div>
                               <p className="font-semibold text-gray-900">David Kim</p>
-                              <p className="text-sm text-gray-600">Photographer & Content Creator</p>
+                              <p className="text-sm text-gray-600">Sound Engineer & Mixer</p>
                             </div>
                           </div>
                         </CardContent>
@@ -525,18 +515,12 @@ export default function SnapScoutLanding() {
                     {index === 2 && (
                       <Card className="bg-white border-0 shadow-lg">
                         <CardHeader>
-                          <div className="flex items-center space-x-1 mb-2">
-                            {[...Array(5)].map((_, i) => (
-                              <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                            ))}
-                          </div>
-                          <CardTitle className="text-lg">Exceptional quality every time</CardTitle>
+                          <CardTitle className="text-lg">Transparent and professional</CardTitle>
                         </CardHeader>
                         <CardContent>
                           <p className="text-gray-600 mb-4">
-                            "We've used SnapScout for multiple campaigns and the quality has been consistently
-                            outstanding. The platform makes it easy to find creators who truly understand our brand
-                            vision."
+                            "Love that I can see everyone's rates, availability, and actual film credits. Makes hiring
+                            decisions so much easier when you have all the professional info upfront."
                           </p>
                           <div className="flex items-center space-x-3">
                             <Image
@@ -548,7 +532,7 @@ export default function SnapScoutLanding() {
                             />
                             <div>
                               <p className="font-semibold text-gray-900">Maria Santos</p>
-                              <p className="text-sm text-gray-600">Brand Manager, Lifestyle Co.</p>
+                              <p className="text-sm text-gray-600">Producer, Indie Films SA</p>
                             </div>
                           </div>
                         </CardContent>
@@ -594,19 +578,19 @@ export default function SnapScoutLanding() {
                           <div className="space-y-3">
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Browse unlimited portfolios</span>
+                              <span>Browse unlimited profiles</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Message creators directly</span>
+                              <span>See rates, gear, and credits</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Secure booking & payments</span>
+                              <span>Contact crew directly</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Project management tools</span>
+                              <span>Filter by location & availability</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
@@ -627,8 +611,8 @@ export default function SnapScoutLanding() {
                           <Badge className="bg-red-700">Most Popular</Badge>
                         </div>
                         <CardHeader className="text-center">
-                          <CardTitle className="text-2xl">Creators</CardTitle>
-                          <CardDescription>Individual photographers & content creators</CardDescription>
+                          <CardTitle className="text-2xl">Crew Members</CardTitle>
+                          <CardDescription>Individual film & content professionals</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                           <div className="text-center">
@@ -638,19 +622,19 @@ export default function SnapScoutLanding() {
                           <div className="space-y-3">
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Professional portfolio showcase</span>
+                              <span>Professional profile with rates</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Unlimited project applications</span>
+                              <span>Showcase credits & gear owned</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Direct client messaging</span>
+                              <span>Link social media & IMDB</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Analytics & insights</span>
+                              <span>Get discovered by clients</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
@@ -659,8 +643,8 @@ export default function SnapScoutLanding() {
                           </div>
                         </CardContent>
                         <CardFooter>
-                          <Button className="w-full bg-red-700 hover:bg-red-800" disabled>
-                            Join Waitlist
+                          <Button asChild className="w-full bg-red-700 hover:bg-red-800">
+                            <Link href="/auth/signup">Join Waitlist</Link>
                           </Button>
                         </CardFooter>
                       </Card>
@@ -679,11 +663,11 @@ export default function SnapScoutLanding() {
                           <div className="space-y-3">
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Team portfolio management</span>
+                              <span>Team profile management</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Multiple creator profiles</span>
+                              <span>Multiple crew profiles</span>
                             </div>
                             <div className="flex items-center space-x-3">
                               <CheckCircle className="h-5 w-5 text-green-600" />
@@ -700,7 +684,7 @@ export default function SnapScoutLanding() {
                           </div>
                         </CardContent>
                         <CardFooter>
-                          <Button className="w-full" variant="outline" disabled>
+                          <Button className="w-full bg-transparent" variant="outline" disabled>
                             Notify Me
                           </Button>
                         </CardFooter>
@@ -723,24 +707,21 @@ export default function SnapScoutLanding() {
                 viewport={{ once: true }}
               >
                 <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                  Your Local Creative Companion is Coming Soon
+                  Ready to Get Discovered by Your Next Client?
                 </h2>
                 <p className="mt-4 text-lg text-red-50">
-                  SnapScout is launching soon! Be the first to discover amazing local talent in your area.
+                  Join SnapScout and create your professional profile. Show your rates, credits, gear, and get booked
+                  directly.
                 </p>
 
-                <Button size="lg" variant="secondary" className="px-8" disabled>
-                  Join Waitlist
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-red-700"
-                  disabled
-                >
-                  Get Notified
-                </Button>
+                <div className="mt-8">
+                  <Button asChild size="lg" className="bg-white text-red-700 hover:bg-gray-100">
+                    <Link href="/auth/signup">
+                      <UserPlus className="mr-2 h-5 w-5" />
+                      Create Your Profile - R60/month
+                    </Link>
+                  </Button>
+                </div>
 
                 <p className="mt-4 text-sm text-red-100">Coming Soon • Be the first to experience SnapScout</p>
               </motion.div>
@@ -772,7 +753,7 @@ export default function SnapScoutLanding() {
                       </div>
                     </div>
                     <p className="mt-4 text-gray-400">
-                      Your local companion for connecting with talented creators based on portfolio quality, not
+                      Your local companion for connecting with talented creators based on professional credentials, not
                       follower count.
                     </p>
                     <div className="mt-6 flex space-x-4">
@@ -808,7 +789,6 @@ export default function SnapScoutLanding() {
                       >
                         <Facebook className="h-5 w-5" />
                       </Link>
-                      {/* Removed the Mail icon as no mail link was provided */}
                     </div>
                   </div>
                 </motion.div>
@@ -824,7 +804,7 @@ export default function SnapScoutLanding() {
                     <ul className="mt-4 space-y-2">
                       <li>
                         <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Browse Creators
+                          Browse Crew
                         </Link>
                       </li>
                       <li>
@@ -853,21 +833,21 @@ export default function SnapScoutLanding() {
                   viewport={{ once: true }}
                 >
                   <div>
-                    <h3 className="text-sm font-semibold uppercase tracking-wider">For Creators</h3>
+                    <h3 className="text-sm font-semibold uppercase tracking-wider">For Crew</h3>
                     <ul className="mt-4 space-y-2">
                       <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        <Link href="/auth/signup" className="text-gray-400 hover:text-white transition-colors">
                           Join SnapScout
                         </Link>
                       </li>
                       <li>
                         <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Creator Resources
+                          Profile Tips
                         </Link>
                       </li>
                       <li>
                         <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Portfolio Tips
+                          Rate Guidelines
                         </Link>
                       </li>
                       <li>
