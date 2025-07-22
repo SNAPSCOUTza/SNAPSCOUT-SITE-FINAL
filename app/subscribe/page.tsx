@@ -11,8 +11,7 @@ import { getCurrentUser } from "@/lib/auth"
 import { useRouter } from "next/navigation"
 
 // Using your actual Stripe product ID
-// Remove the Stripe product ID constant
-// const STRIPE_PRODUCT_ID = "prod_Sgth8qTGYJJojz"
+const STRIPE_PRODUCT_ID = "prod_Sgth8qTGYJJojz"
 
 export default function SubscribePage() {
   const [loading, setLoading] = useState(false)
@@ -32,16 +31,8 @@ export default function SubscribePage() {
   }, [router])
 
   const handleSubscribe = async () => {
-    if (!user) return
-    setLoading(true)
-    // Simulate subscription process or redirect to a placeholder
-    // In a real scenario, you would integrate with your chosen payment gateway here.
-    setTimeout(() => {
-      alert("Subscription process initiated! (Stripe SDK removed)")
-      setLoading(false)
-      // Optionally redirect to a success page or dashboard
-      router.push("/dashboard")
-    }, 1500)
+    // Redirect to signup instead of Stripe
+    router.push("/auth/signup")
   }
 
   if (!user) {
@@ -115,8 +106,7 @@ export default function SubscribePage() {
                   <span className="text-4xl font-bold">R60</span>
                   <span className="text-gray-600">/month</span>
                 </div>
-                {/* Remove the Stripe product ID display in CardHeader */}
-                {/* <p className="text-xs text-gray-500 mt-2">Product ID: {STRIPE_PRODUCT_ID}</p> */}
+                <p className="text-xs text-gray-500 mt-2">Product ID: {STRIPE_PRODUCT_ID}</p>
               </CardHeader>
 
               <CardContent className="space-y-6">
@@ -156,8 +146,9 @@ export default function SubscribePage() {
                   className="w-full bg-red-700 hover:bg-red-800 text-lg py-6"
                   disabled={loading}
                 >
-                  {loading ? "Subscribe Now" : "Create My Profile - R60/month"}
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  Coming Soon
+                  {/* {loading ? "Subscribe Now" : "Create My Profile - R60/month"}
+                  <ArrowRight className="ml-2 h-5 w-5" /> */}
                 </Button>
 
                 <p className="text-xs text-gray-500 text-center">

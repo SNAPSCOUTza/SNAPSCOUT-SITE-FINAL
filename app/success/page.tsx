@@ -7,7 +7,6 @@ import { CheckCircle, Crown, Edit } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { getCurrentUser } from "@/lib/auth"
-import { supabase } from "@/lib/auth"
 import { useRouter } from "next/navigation"
 
 export default function SuccessPage() {
@@ -24,19 +23,6 @@ export default function SuccessPage() {
       }
 
       setUser(currentUser)
-
-      // Update user subscription status to active
-      // Note: In a real implementation, this would be handled by Stripe webhooks
-      // For now, we'll manually set it to active when they reach this page
-      await supabase.from("user_subscriptions").upsert({
-        user_id: currentUser.id,
-        subscription_id: `sub_${Date.now()}`, // Temporary ID
-        customer_id: `cus_${Date.now()}`, // Temporary ID
-        status: "active",
-        current_period_start: new Date().toISOString(),
-        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
-      })
-
       setLoading(false)
     }
 
@@ -48,7 +34,7 @@ export default function SuccessPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-700 mx-auto mb-4"></div>
-          <p className="text-gray-600">Processing your subscription...</p>
+          <p className="text-gray-600">Processing...</p>
         </div>
       </div>
     )
@@ -83,15 +69,14 @@ export default function SuccessPage() {
               <div className="mx-auto mb-4 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
                 <CheckCircle className="h-8 w-8 text-green-600" />
               </div>
-              <CardTitle className="text-3xl text-green-800">Payment Successful!</CardTitle>
-              <CardDescription className="text-lg">
-                Welcome to SnapScout Pro! Your subscription is now active.
-              </CardDescription>
+              <CardTitle className="text-3xl text-green-800">Success!</CardTitle>
+              <CardDescription className="text-lg">Welcome to SnapScout Pro!</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="bg-green-50 p-4 rounded-lg">
                 <div className="flex items-center mb-2">
                   <Crown className="h-5 w-5 text-green-600 mr-2" />
+                  <span className="font-semibold text-green-800">Pro Crew Member</span>
                 </div>
                 <p className="text-sm text-green-700">
                   You now have full access to create your professional profile page and get discovered by clients
@@ -100,7 +85,7 @@ export default function SuccessPage() {
               </div>
 
               <div className="space-y-3">
-                <h3 className="font-semibold text-gray-900">What's included in your subscription:</h3>
+                <h3 className="font-semibold text-gray-900">What's included:</h3>
                 <div className="space-y-2">
                   <div className="flex items-center">
                     <CheckCircle className="h-4 w-4 text-green-600 mr-2" />
