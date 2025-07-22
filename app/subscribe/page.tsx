@@ -11,7 +11,8 @@ import { getCurrentUser } from "@/lib/auth"
 import { useRouter } from "next/navigation"
 
 // Using your actual Stripe product ID
-const STRIPE_PRODUCT_ID = "prod_Sgth8qTGYJJojz"
+// Remove the Stripe product ID constant
+// const STRIPE_PRODUCT_ID = "prod_Sgth8qTGYJJojz"
 
 export default function SubscribePage() {
   const [loading, setLoading] = useState(false)
@@ -32,9 +33,15 @@ export default function SubscribePage() {
 
   const handleSubscribe = async () => {
     if (!user) return
-
-    // Redirect to Stripe payment link with your product ID
-    window.location.href = "https://buy.stripe.com/test_28o5lq0Hy9Hn6nS4gg"
+    setLoading(true)
+    // Simulate subscription process or redirect to a placeholder
+    // In a real scenario, you would integrate with your chosen payment gateway here.
+    setTimeout(() => {
+      alert("Subscription process initiated! (Stripe SDK removed)")
+      setLoading(false)
+      // Optionally redirect to a success page or dashboard
+      router.push("/dashboard")
+    }, 1500)
   }
 
   if (!user) {
@@ -108,7 +115,8 @@ export default function SubscribePage() {
                   <span className="text-4xl font-bold">R60</span>
                   <span className="text-gray-600">/month</span>
                 </div>
-                <p className="text-xs text-gray-500 mt-2">Product ID: {STRIPE_PRODUCT_ID}</p>
+                {/* Remove the Stripe product ID display in CardHeader */}
+                {/* <p className="text-xs text-gray-500 mt-2">Product ID: {STRIPE_PRODUCT_ID}</p> */}
               </CardHeader>
 
               <CardContent className="space-y-6">

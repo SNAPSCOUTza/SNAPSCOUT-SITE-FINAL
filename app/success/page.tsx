@@ -92,9 +92,6 @@ export default function SuccessPage() {
               <div className="bg-green-50 p-4 rounded-lg">
                 <div className="flex items-center mb-2">
                   <Crown className="h-5 w-5 text-green-600 mr-2" />
-                  <span className="font-semibold text-green-800">
-                    Pro Crew Member - Product ID: prod_Sgth8qTGYJJojz
-                  </span>
                 </div>
                 <p className="text-sm text-green-700">
                   You now have full access to create your professional profile page and get discovered by clients

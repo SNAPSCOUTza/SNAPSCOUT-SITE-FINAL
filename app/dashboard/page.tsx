@@ -24,7 +24,6 @@ import {
 import Link from "next/link"
 import Image from "next/image"
 import { getCurrentUser, signOut, updatePassword } from "@/lib/auth"
-import { createPortalSession } from "@/lib/stripe"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/lib/auth"
 
@@ -117,14 +116,6 @@ export default function DashboardPage() {
     }
   }
 
-  const handleManageBilling = async () => {
-    try {
-      await createPortalSession()
-    } catch (error) {
-      console.error("Error opening billing portal:", error)
-    }
-  }
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -168,11 +159,14 @@ export default function DashboardPage() {
               clients.
             </p>
             <Button
-              onClick={() => (window.location.href = "https://buy.stripe.com/test_28o5lq0Hy9Hn6nS4gg")}
+              onClick={() =>
+                alert("Subscription is required. Stripe SDK has been removed, so direct payment link is unavailable.")
+              }
               size="lg"
               className="bg-red-700 hover:bg-red-800"
+              disabled
             >
-              Subscribe Now - R60/month
+              Subscribe Now - R60/month (Disabled)
             </Button>
           </div>
         </div>
@@ -269,9 +263,14 @@ export default function DashboardPage() {
                       </p>
                     </div>
                   </div>
-                  <Button onClick={handleManageBilling} variant="outline" className="w-full bg-transparent">
+                  <Button
+                    onClick={() => alert("Billing management is not available as Stripe SDK has been removed.")}
+                    variant="outline"
+                    className="w-full bg-transparent"
+                    disabled
+                  >
                     <CreditCard className="h-4 w-4 mr-2" />
-                    Manage Billing
+                    Manage Billing (Disabled)
                   </Button>
                 </CardContent>
               </Card>
@@ -454,12 +453,13 @@ export default function DashboardPage() {
                     </Button>
                   )}
                   <Button
-                    onClick={handleManageBilling}
+                    onClick={() => alert("Billing portal is not available as Stripe SDK has been removed.")}
                     variant="outline"
                     className="w-full justify-start bg-transparent"
+                    disabled
                   >
                     <CreditCard className="h-4 w-4 mr-2" />
-                    Billing Portal
+                    Billing Portal (Disabled)
                   </Button>
                 </CardContent>
               </Card>
