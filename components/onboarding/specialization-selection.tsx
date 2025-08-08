@@ -23,7 +23,7 @@ const specializations = [
   "Writing",
 ]
 
-export function SpecializationSelection() {
+export default function SpecializationSelection() {
   const { nextStep, prevStep, currentStep, setSpecializations } =
     useOnboarding()
   const [selectedSpecializations, setSelectedSpecializations] = useState<

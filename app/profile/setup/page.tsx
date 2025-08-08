@@ -18,19 +18,7 @@ import Image from "next/image"
 import { getCurrentUser } from "@/lib/auth"
 import { supabase } from "@/lib/auth"
 import { useRouter } from "next/navigation"
-
-// South African provinces and cities data - matching the directory structure
-const southAfricanLocations = {
-  "Western Cape": ["Cape Town", "Stellenbosch", "George", "Hermanus", "Paarl", "Worcester", "Mossel Bay", "Knysna"],
-  "Gauteng": ["Johannesburg", "Pretoria", "Sandton", "Centurion", "Randburg", "Roodepoort", "Germiston", "Benoni"],
-  "KwaZulu-Natal": ["Durban", "Pietermaritzburg", "Newcastle", "Richards Bay", "Ladysmith", "Empangeni", "Pinetown"],
-  "Eastern Cape": ["Port Elizabeth", "East London", "Grahamstown", "Uitenhage", "King William's Town", "Queenstown"],
-  "Limpopo": ["Polokwane", "Tzaneen", "Mokopane", "Thohoyandou", "Musina", "Giyani"],
-  "Mpumalanga": ["Nelspruit", "Witbank", "Secunda", "Standerton", "Middelburg", "Ermelo"],
-  "North West": ["Rustenburg", "Klerksdorp", "Potchefstroom", "Mahikeng", "Brits", "Vryburg"],
-  "Northern Cape": ["Kimberley", "Upington", "Springbok", "De Aar", "Kuruman", "Postmasburg"],
-  "Free State": ["Bloemfontein", "Welkom", "Kroonstad", "Bethlehem", "Sasolburg", "Parys"]
-}
+import { citiesByProvince } from "@/lib/locations"
 
 // Comprehensive software and skills options
 const softwareAndSkills = {
@@ -213,8 +201,6 @@ export default function ProfileSetupPage() {
     verified: false
   })
 
-  // ... (UI logic functions like updateProfileData, toggleProvince, etc. remain the same)
-
   const updateProfileData = (updates: Partial<ProfileData>) => {
     setProfileData(prev => ({ ...prev, ...updates }))
   }
@@ -223,7 +209,7 @@ export default function ProfileSetupPage() {
     const isSelected = profileData.selectedProvinces.includes(province)
     if (isSelected) {
       // Remove province and all its cities
-      const provinceCities = southAfricanLocations[province as keyof typeof southAfricanLocations] || []
+      const provinceCities = citiesByProvince[province as keyof typeof citiesByProvince] || []
       updateProfileData({
         selectedProvinces: profileData.selectedProvinces.filter(p => p !== province),
         selectedCities: profileData.selectedCities.filter(c => !provinceCities.includes(c))
@@ -402,7 +388,6 @@ export default function ProfileSetupPage() {
   }
 
   return (
-    // JSX remains the same
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="container mx-auto px-4 py-8">
         <motion.div
@@ -544,7 +529,7 @@ export default function ProfileSetupPage() {
                     <div className="space-y-4">
                       <h4 className="text-white font-medium">Select Provinces ({profileData.selectedProvinces.length}/9)</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {Object.entries(southAfricanLocations).map(([province, cities]) => {
+                        {Object.entries(citiesByProvince).map(([province, cities]) => {
                           const isSelected = profileData.selectedProvinces.includes(province)
                           const selectedCitiesInProvince = profileData.selectedCities.filter(city => cities.includes(city))
                           
@@ -615,7 +600,7 @@ export default function ProfileSetupPage() {
                               </CardHeader>
                               <CardContent className="pt-0">
                                 <div className="flex flex-wrap gap-2">
-                                  {southAfricanLocations[province as keyof typeof southAfricanLocations]?.map((city) => {
+                                  {citiesByProvince[province as keyof typeof citiesByProvince]?.map((city) => {
                                     const isSelected = profileData.selectedCities.includes(city)
                                     return (
                                       <Badge

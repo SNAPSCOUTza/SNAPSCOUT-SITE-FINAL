@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 
-export function WelcomePage() {
+export default function WelcomePage() {
   const router = useRouter()
   const { nextStep, currentStep } = useOnboarding()
 

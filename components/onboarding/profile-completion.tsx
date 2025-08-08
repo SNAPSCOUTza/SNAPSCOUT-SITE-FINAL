@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
 
-export function ProfileCompletion() {
+export default function ProfileCompletion() {
   const { nextStep, prevStep, currentStep, setProfileCompletion } =
     useOnboarding()
   const [profilePicture, setProfilePicture] = useState<File | null>(null)

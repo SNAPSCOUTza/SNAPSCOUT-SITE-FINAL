@@ -4,27 +4,42 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { LogOut, User } from 'lucide-react'
-import { getCurrentUser, signOut } from '@/lib/auth'
+import { LogOut, User, LogIn } from 'lucide-react'
+import { supabase, signOut } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 export default function Header() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<SupabaseUser | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const currentUser = await getCurrentUser()
-      setUser(currentUser)
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        const currentUser = session?.user ?? null
+        setUser(currentUser)
+        setLoading(false)
+      }
+    )
+
+    // Initial check
+    const checkUser = async () => {
+      const { data } = await supabase.auth.getUser()
+      setUser(data.user)
       setLoading(false)
     }
-    fetchUser()
+    checkUser()
+
+    return () => {
+      authListener?.subscription.unsubscribe()
+    }
   }, [])
 
   const handleSignOut = async () => {
     await signOut()
     router.push('/')
+    router.refresh() // Force a refresh to ensure state is cleared everywhere
   }
 
   if (loading) {
@@ -101,12 +116,20 @@ export default function Header() {
                 </Button>
               </div>
             ) : (
-              <Button asChild className="ml-4 bg-red-600 hover:bg-red-700 text-white">
-                <Link href="/onboarding">
-                  <User className="w-4 h-4 mr-2" />
-                  Join as Pro
-                </Link>
-              </Button>
+              <div className="flex items-center space-x-2 ml-4">
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/auth/login">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Sign In
+                  </Link>
+                </Button>
+                <Button asChild className="bg-red-600 hover:bg-red-700 text-white">
+                  <Link href="/onboarding">
+                    <User className="w-4 h-4 mr-2" />
+                    Join as Pro
+                  </Link>
+                </Button>
+              </div>
             )}
           </nav>
         </div>

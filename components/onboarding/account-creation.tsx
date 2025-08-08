@@ -9,9 +9,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
-import { signIn, signUp } from "@/lib/auth"
+import { signUp } from "@/lib/auth"
 
-export function AccountCreation() {
+export default function AccountCreation() {
   const { nextStep, prevStep, currentStep, setEmail, setPassword } =
     useOnboarding()
   const [emailInput, setEmailInput] = useState("")

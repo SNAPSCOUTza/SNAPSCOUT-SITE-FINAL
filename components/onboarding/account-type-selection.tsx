@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 
-export function AccountTypeSelection() {
+export default function AccountTypeSelection() {
   const { nextStep, prevStep, currentStep, setAccountType } = useOnboarding()
 
   const handleSelectAccountType = (type: "creator" | "client" | "studio") => {

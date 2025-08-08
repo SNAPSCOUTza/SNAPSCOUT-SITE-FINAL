@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Textarea } from "@/components/ui/textarea"
 
-export function ProfileBasics() {
+export default function ProfileBasics() {
   const { nextStep, prevStep, currentStep, setProfileBasics } = useOnboarding()
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
