@@ -1,118 +1,354 @@
 "use client"
 
-import { useState } from "react"
-import Image from "next/image"
-import { useOnboarding } from "./onboarding-provider"
-
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Progress } from "@/components/ui/progress"
-import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+import { ArrowRight, DollarSign, Briefcase, Star } from 'lucide-react'
+import type { OnboardingData } from "@/app/onboarding/page"
 
-export function ProfileCompletion() {
-  const { nextStep, prevStep, currentStep, setProfileCompletion } =
-    useOnboarding()
-  const [profilePicture, setProfilePicture] = useState<File | null>(null)
-  const [portfolioLink, setPortfolioLink] = useState("")
-  const [socialMediaLink, setSocialMediaLink] = useState("")
-  const [isPublic, setIsPublic] = useState(true)
+interface ProfileCompletionProps {
+  onNext: () => void
+  onPrev: () => void
+  data: OnboardingData
+  updateData: (updates: Partial<OnboardingData>) => void
+}
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setProfilePicture(event.target.files[0])
+const experienceLevels = [
+  { value: 'beginner', label: 'Beginner (0-2 years)' },
+  { value: 'intermediate', label: 'Intermediate (2-5 years)' },
+  { value: 'experienced', label: 'Experienced (5-10 years)' },
+  { value: 'expert', label: 'Expert (10+ years)' }
+]
+
+const languages = [
+  'English', 'Afrikaans', 'Zulu', 'Xhosa', 'Sotho', 'Tswana', 'Venda', 'Tsonga', 'Ndebele', 'Swati', 'Portuguese', 'French', 'German'
+]
+
+const creatorServices = [
+  'Portrait Photography', 'Wedding Photography', 'Event Photography', 'Commercial Photography',
+  'Product Photography', 'Fashion Photography', 'Landscape Photography', 'Street Photography',
+  'Videography', 'Drone Photography', 'Photo Editing', 'Video Editing'
+]
+
+const creatorGear = [
+  'DSLR Camera', 'Mirrorless Camera', 'Professional Lenses', 'Lighting Equipment',
+  'Tripods & Stabilizers', 'Drone', 'Audio Equipment', 'Editing Software'
+]
+
+const creatorSkills = [
+  'Adobe Photoshop', 'Adobe Lightroom', 'Adobe Premiere Pro', 'Final Cut Pro',
+  'Color Grading', 'Retouching', 'Studio Lighting', 'Natural Light Photography'
+]
+
+export default function ProfileCompletion({ onNext, onPrev, data, updateData }: ProfileCompletionProps) {
+  const handleInputChange = (field: keyof OnboardingData, value: string) => {
+    updateData({ [field]: value })
+  }
+
+  const handleArrayToggle = (field: keyof OnboardingData, value: string) => {
+    const currentArray = (data[field] as string[]) || []
+    const isSelected = currentArray.includes(value)
+    
+    if (isSelected) {
+      updateData({
+        [field]: currentArray.filter(item => item !== value)
+      })
+    } else {
+      updateData({
+        [field]: [...currentArray, value]
+      })
     }
   }
 
-  const handleNext = () => {
-    setProfileCompletion({
-      profilePicture,
-      portfolioLink,
-      socialMediaLink,
-      isPublic,
-    })
-    nextStep()
-  }
+  const isCreator = data.userType === 'creator'
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 text-foreground">
-      <div className="absolute left-4 top-4 flex items-center gap-2">
-        <Image
-          src="/images/snapscout-circular-logo.png"
-          alt="SnapScout Logo"
-          width={32}
-          height={32}
-        />
-        <span className="text-lg font-semibold">SnapScout</span>
-      </div>
-      <div className="absolute right-4 top-4 flex items-center gap-2 text-sm text-muted-foreground">
-        Step {currentStep} of 8
-        <Progress value={(currentStep / 8) * 100} className="w-24" />
-      </div>
+    <div className="max-w-4xl mx-auto space-y-8">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-center space-y-4"
+      >
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+          Complete Your Professional Profile
+        </h1>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          Add professional details to make your profile stand out (all fields are optional)
+        </p>
+      </motion.div>
 
-      <Card className="w-full max-w-md bg-card p-8 shadow-lg">
-        <CardContent className="flex flex-col items-center justify-center p-0 text-center">
-          <h2 className="mb-8 text-3xl font-bold text-foreground">
-            Complete Your Profile
-          </h2>
-          <p className="mb-6 text-muted-foreground">
-            Add a profile picture, portfolio, and social media links.
-          </p>
-          <div className="w-full space-y-4">
-            <div>
-              <Label htmlFor="profile-picture">Profile Picture (Optional)</Label>
-              <Input
-                id="profile-picture"
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="bg-muted text-foreground"
-              />
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="space-y-8"
+      >
+        <Card className="bg-white border-gray-200 shadow-sm">
+          <CardContent className="p-8 space-y-6">
+            <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+              <Briefcase className="w-5 h-5 mr-2 text-primary" />
+              Professional Information
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="text-gray-700">Full Name</Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="Your full legal name"
+                  value={data.fullName}
+                  onChange={(e) => handleInputChange('fullName', e.target.value)}
+                  className="bg-gray-50 border-gray-300 text-gray-900"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="city" className="text-gray-700">City</Label>
+                <Input
+                  id="city"
+                  type="text"
+                  placeholder="e.g., Cape Town"
+                  value={data.city}
+                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  className="bg-gray-50 border-gray-300 text-gray-900"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="experienceLevel" className="text-gray-700">Experience Level</Label>
+                <Select value={data.experienceLevel} onValueChange={(value) => handleInputChange('experienceLevel', value)}>
+                  <SelectTrigger className="bg-gray-50 border-gray-300 text-gray-900">
+                    <SelectValue placeholder="Select your experience level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {experienceLevels.map((level) => (
+                      <SelectItem key={level.value} value={level.value}>
+                        {level.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="yearsExperience" className="text-gray-700">Years of Experience</Label>
+                <Input
+                  id="yearsExperience"
+                  type="number"
+                  placeholder="e.g., 5"
+                  value={data.yearsExperience}
+                  onChange={(e) => handleInputChange('yearsExperience', e.target.value)}
+                  className="bg-gray-50 border-gray-300 text-gray-900"
+                />
+              </div>
             </div>
-            <div>
-              <Label htmlFor="portfolio-link">Portfolio Link (Optional)</Label>
-              <Input
-                id="portfolio-link"
-                type="url"
-                placeholder="https://yourportfolio.com"
-                value={portfolioLink}
-                onChange={(e) => setPortfolioLink(e.target.value)}
-                className="bg-muted text-foreground"
-              />
+          </CardContent>
+        </Card>
+
+        {isCreator && (
+          <Card className="bg-white border-gray-200 shadow-sm">
+            <CardContent className="p-8 space-y-6">
+              <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+                <DollarSign className="w-5 h-5 mr-2 text-primary" />
+                Pricing Information
+              </h2>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="hourlyRate" className="text-gray-700">Hourly Rate (ZAR)</Label>
+                  <Input
+                    id="hourlyRate"
+                    type="number"
+                    placeholder="e.g., 500"
+                    value={data.hourlyRate}
+                    onChange={(e) => handleInputChange('hourlyRate', e.target.value)}
+                    className="bg-gray-50 border-gray-300 text-gray-900"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="dailyRate" className="text-gray-700">Daily Rate (ZAR)</Label>
+                  <Input
+                    id="dailyRate"
+                    type="number"
+                    placeholder="e.g., 3000"
+                    value={data.dailyRate}
+                    onChange={(e) => handleInputChange('dailyRate', e.target.value)}
+                    className="bg-gray-50 border-gray-300 text-gray-900"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="projectRate" className="text-gray-700">Project Rate (ZAR)</Label>
+                  <Input
+                    id="projectRate"
+                    type="number"
+                    placeholder="Starting from..."
+                    value={data.projectRate}
+                    onChange={(e) => handleInputChange('projectRate', e.target.value)}
+                    className="bg-gray-50 border-gray-300 text-gray-900"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card className="bg-white border-gray-200 shadow-sm">
+          <CardContent className="p-8 space-y-6">
+            <h2 className="text-xl font-semibold text-gray-800">Languages Spoken</h2>
+            <div className="flex flex-wrap gap-2">
+              {languages.map((language) => {
+                const isSelected = data.languagesSpoken?.includes(language) || false
+                return (
+                  <Badge
+                    key={language}
+                    variant={isSelected ? "default" : "outline"}
+                    className={`cursor-pointer transition-all ${
+                      isSelected
+                        ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                        : 'border-gray-300 text-gray-600 hover:border-primary hover:text-primary'
+                    }`}
+                    onClick={() => handleArrayToggle('languagesSpoken', language)}
+                  >
+                    {language}
+                  </Badge>
+                )
+              })}
             </div>
-            <div>
-              <Label htmlFor="social-media-link">
-                Social Media Link (Optional)
-              </Label>
-              <Input
-                id="social-media-link"
-                type="url"
-                placeholder="https://instagram.com/yourhandle"
-                value={socialMediaLink}
-                onChange={(e) => setSocialMediaLink(e.target.value)}
-                className="bg-muted text-foreground"
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label htmlFor="public-profile" className="text-foreground">
-                Make Profile Public
-              </Label>
-              <Switch
-                id="public-profile"
-                checked={isPublic}
-                onCheckedChange={setIsPublic}
-              />
-            </div>
-            <Button onClick={handleNext} className="w-full">
-              Next
-            </Button>
-            <Button onClick={prevStep} variant="ghost" className="w-full">
-              Back
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+
+        {isCreator && (
+          <>
+            <Card className="bg-white border-gray-200 shadow-sm">
+              <CardContent className="p-8 space-y-6">
+                <h2 className="text-xl font-semibold text-gray-800">Services Offered</h2>
+                <div className="flex flex-wrap gap-2">
+                  {creatorServices.map((service) => {
+                    const isSelected = data.servicesOffered?.includes(service) || false
+                    return (
+                      <Badge
+                        key={service}
+                        variant={isSelected ? "default" : "outline"}
+                        className={`cursor-pointer transition-all ${
+                          isSelected
+                            ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                            : 'border-gray-300 text-gray-600 hover:border-primary hover:text-primary'
+                        }`}
+                        onClick={() => handleArrayToggle('servicesOffered', service)}
+                      >
+                        {service}
+                      </Badge>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white border-gray-200 shadow-sm">
+              <CardContent className="p-8 space-y-6">
+                <h2 className="text-xl font-semibold text-gray-800">Equipment & Gear</h2>
+                <div className="flex flex-wrap gap-2">
+                  {creatorGear.map((gear) => {
+                    const isSelected = data.gearOwned?.includes(gear) || false
+                    return (
+                      <Badge
+                        key={gear}
+                        variant={isSelected ? "default" : "outline"}
+                        className={`cursor-pointer transition-all ${
+                          isSelected
+                            ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                            : 'border-gray-300 text-gray-600 hover:border-primary hover:text-primary'
+                        }`}
+                        onClick={() => handleArrayToggle('gearOwned', gear)}
+                      >
+                        {gear}
+                      </Badge>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white border-gray-200 shadow-sm">
+              <CardContent className="p-8 space-y-6">
+                <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+                  <Star className="w-5 h-5 mr-2 text-primary" />
+                  Special Skills & Software
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {creatorSkills.map((skill) => {
+                    const isSelected = data.specialSkills?.includes(skill) || false
+                    return (
+                      <Badge
+                        key={skill}
+                        variant={isSelected ? "default" : "outline"}
+                        className={`cursor-pointer transition-all ${
+                          isSelected
+                            ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                            : 'border-gray-300 text-gray-600 hover:border-primary hover:text-primary'
+                        }`}
+                        onClick={() => handleArrayToggle('specialSkills', skill)}
+                      >
+                        {skill}
+                      </Badge>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white border-gray-200 shadow-sm">
+              <CardContent className="p-8 space-y-6">
+                <h2 className="text-xl font-semibold text-gray-800">Professional Links</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="linkedin" className="text-gray-700">LinkedIn Profile</Label>
+                    <Input
+                      id="linkedin"
+                      type="url"
+                      placeholder="https://linkedin.com/in/yourprofile"
+                      value={data.linkedin}
+                      onChange={(e) => handleInputChange('linkedin', e.target.value)}
+                      className="bg-gray-50 border-gray-300 text-gray-900"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="imdbProfile" className="text-gray-700">IMDB Profile</Label>
+                    <Input
+                      id="imdbProfile"
+                      type="url"
+                      placeholder="https://imdb.com/name/yourprofile"
+                      value={data.imdbProfile}
+                      onChange={(e) => handleInputChange('imdbProfile', e.target.value)}
+                      className="bg-gray-50 border-gray-300 text-gray-900"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
+
+        <div className="text-center pt-8 pb-8">
+          <Button
+            onClick={onNext}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold shadow-lg"
+            size="lg"
+          >
+            Complete Profile
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
+        </div>
+      </motion.div>
     </div>
   )
 }

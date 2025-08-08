@@ -4,7 +4,25 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { User, MapPin, Phone, Mail, Instagram, Linkedin, Youtube, Facebook, Globe, Camera, Edit, ExternalLink, MessageCircle, Film, Languages, DollarSign, Clapperboard } from 'lucide-react'
+import {
+  User,
+  MapPin,
+  Phone,
+  Mail,
+  Instagram,
+  Linkedin,
+  Youtube,
+  Facebook,
+  Globe,
+  Camera,
+  Edit,
+  ExternalLink,
+  MessageCircle,
+  Film,
+  Languages,
+  DollarSign,
+  Clapperboard,
+} from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { supabase } from "@/lib/auth"
@@ -78,8 +96,6 @@ export default function ProfilePage() {
     )
   }
 
-  const locationDisplay = [profile.cities, profile.provinces].filter(Boolean).join(', ');
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -122,12 +138,8 @@ export default function ProfilePage() {
           <Card className="mb-8">
             <CardContent className="p-8">
               <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
-                <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-                  {profile.profile_picture ? (
-                    <Image src={profile.profile_picture || "/placeholder.svg"} alt={profile.display_name} width={128} height={128} className="object-cover"/>
-                  ) : (
-                    <User className="h-16 w-16 text-gray-400" />
-                  )}
+                <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center">
+                  <User className="h-16 w-16 text-gray-400" />
                 </div>
 
                 <div className="flex-1">
@@ -135,26 +147,30 @@ export default function ProfilePage() {
                     <h1 className="text-3xl font-bold text-gray-900">{profile.display_name}</h1>
                     <Badge
                       className={`${
-                        profile.availability_status === "available"
+                        profile.availability === "available"
                           ? "bg-green-100 text-green-800"
-                          : profile.availability_status === "busy"
+                          : profile.availability === "busy"
                             ? "bg-yellow-100 text-yellow-800"
                             : "bg-red-100 text-red-800"
                       }`}
                     >
-                      {profile.availability_status?.charAt(0).toUpperCase() + profile.availability_status?.slice(1)}
+                      {profile.availability === "available"
+                        ? "Available"
+                        : profile.availability === "busy"
+                          ? "Busy"
+                          : "Fully Booked"}
                     </Badge>
                   </div>
 
                   <p className="text-xl text-red-700 font-semibold mb-2">{profile.profession}</p>
 
-                  <div className="flex items-center text-gray-600 mb-4 flex-wrap">
+                  <div className="flex items-center text-gray-600 mb-4">
                     <MapPin className="h-4 w-4 mr-1" />
-                    <span>{locationDisplay || 'Location not specified'}</span>
-                    {profile.years_experience && (
+                    <span>{profile.location}</span>
+                    {profile.experience_years && (
                       <>
                         <span className="mx-2">•</span>
-                        <span>{profile.years_experience} years experience</span>
+                        <span>{profile.experience_years} years experience</span>
                       </>
                     )}
                     {profile.hourly_rate && (
@@ -167,7 +183,7 @@ export default function ProfilePage() {
 
                   <div className="flex items-center space-x-3 mb-2">
                     {profile.department && <Badge variant="secondary">{profile.department}</Badge>}
-                    {profile.roles && profile.roles.map((role: string, i: number) => <Badge key={i} variant="secondary">{role}</Badge>)}
+                    {profile.role && <Badge variant="secondary">{profile.role}</Badge>}
                     {profile.experience_level && <Badge variant="secondary">{profile.experience_level}</Badge>}
                   </div>
 

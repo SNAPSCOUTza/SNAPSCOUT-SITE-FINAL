@@ -101,7 +101,7 @@ export default function Header() {
                 </Button>
               </div>
             ) : (
-              <Button asChild className="ml-4 bg-red-600 hover:bg-red-700 text-white">
+              <Button asChild className="ml-4">
                 <Link href="/onboarding">
                   <User className="w-4 h-4 mr-2" />
                   Join as Pro

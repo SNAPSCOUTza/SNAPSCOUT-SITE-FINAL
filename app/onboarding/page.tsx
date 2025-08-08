@@ -3,15 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Camera, Search, Building2, ArrowRight, ArrowLeft, Check } from 'lucide-react'
 import Image from "next/image"
-import Link from "next/link"
-import { redirect } from "next/navigation"
-import { cookies } from "next/headers"
-import { getCurrentUser } from "@/lib/auth"
 
 // Onboarding steps
 import WelcomePage from "@/components/onboarding/welcome-page"
@@ -22,6 +14,7 @@ import SpecializationSelection from "@/components/onboarding/specialization-sele
 import LocationPreferences from "@/components/onboarding/location-preferences"
 import ProfileCompletion from "@/components/onboarding/profile-completion"
 import WelcomeToDashboard from "@/components/onboarding/welcome-to-dashboard"
+import { ArrowLeft } from 'lucide-react'
 
 export interface OnboardingData {
   userType: 'creator' | 'client' | 'studio' | null
@@ -36,16 +29,13 @@ export interface OnboardingData {
   willingToTravel: boolean
   socialLinks: {
     instagram: string
-    youtube: string // This will be used for YouTube/Vimeo
+    youtube: string
     tiktok: string
     website: string
   }
-  // New fields for social/professional links
   imdbProfile: string
   linkedin: string
-  youtube_vimeo: string // Added this field for consistency with dashboard
-
-  // Profile completion fields
+  youtube_vimeo: string
   fullName: string
   city: string
   provinceCountry: string
@@ -64,8 +54,8 @@ export interface OnboardingData {
 
 const TOTAL_STEPS = 8
 
-function OnboardingFlow({ initialStep }: { initialStep: number }) {
-  const [currentStep, setCurrentStep] = useState(initialStep)
+export default function OnboardingFlow() {
+  const [currentStep, setCurrentStep] = useState(1)
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
     userType: null,
     email: '',
@@ -83,10 +73,9 @@ function OnboardingFlow({ initialStep }: { initialStep: number }) {
       tiktok: '',
       website: ''
     },
-    imdbProfile: '', // Initialized
-    linkedin: '', // Initialized
-    youtube_vimeo: '', // Initialized
-
+    imdbProfile: '',
+    linkedin: '',
+    youtube_vimeo: '',
     fullName: '',
     city: '',
     provinceCountry: '',
@@ -103,7 +92,6 @@ function OnboardingFlow({ initialStep }: { initialStep: number }) {
     specialSkills: [],
   })
 
-  // Auto-save progress to localStorage
   useEffect(() => {
     const savedData = localStorage.getItem('snapscout-onboarding')
     if (savedData) {
@@ -143,106 +131,50 @@ function OnboardingFlow({ initialStep }: { initialStep: number }) {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return (
-          <WelcomePage
-            onNext={nextStep}
-            data={onboardingData}
-            updateData={updateOnboardingData}
-          />
-        )
+        return <WelcomePage onNext={nextStep} data={onboardingData} updateData={updateOnboardingData} />
       case 2:
-        return (
-          <AccountTypeSelection
-            onNext={nextStep}
-            onPrev={prevStep}
-            data={onboardingData}
-            updateData={updateOnboardingData}
-          />
-        )
+        return <AccountTypeSelection onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
       case 3:
-        return (
-          <AccountCreation
-            onNext={nextStep}
-            onPrev={prevStep}
-            data={onboardingData}
-            updateData={updateOnboardingData}
-          />
-        )
+        return <AccountCreation onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
       case 4:
-        return (
-          <ProfileBasics
-            onNext={nextStep}
-            onPrev={prevStep}
-            data={onboardingData}
-            updateData={updateOnboardingData}
-          />
-        )
+        return <ProfileBasics onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
       case 5:
-        return (
-          <SpecializationSelection
-            onNext={nextStep}
-            onPrev={prevStep}
-            data={onboardingData}
-            updateData={updateOnboardingData}
-          />
-        )
+        return <SpecializationSelection onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
       case 6:
-        return (
-          <LocationPreferences
-            onNext={nextStep}
-            onPrev={prevStep}
-            data={onboardingData}
-            updateData={updateOnboardingData}
-          />
-        )
+        return <LocationPreferences onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
       case 7:
-        return (
-          <ProfileCompletion
-            onNext={nextStep}
-            onPrev={prevStep}
-            data={onboardingData}
-            updateData={updateOnboardingData}
-          />
-        )
+        return <ProfileCompletion onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
       case 8:
-        return (
-          <WelcomeToDashboard
-            data={onboardingData}
-            onComplete={() => {
-              localStorage.removeItem('snapscout-onboarding')
-              // Redirect to dashboard
-            }}
-          />
-        )
+        return <WelcomeToDashboard data={onboardingData} onComplete={() => localStorage.removeItem('snapscout-onboarding')} />
       default:
         return null
     }
   }
 
   return (
-    <div className="bg-gray-50 text-gray-900 min-h-screen overflow-x-hidden">
+    <div className="min-h-screen bg-white text-gray-900 overflow-x-hidden">
       {/* Progress Bar */}
       {currentStep < 8 && (
-        <div className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50">
+        <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-200">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
                 <Image
-                  src="/images/snapscout-new-logo.jpeg"
+                  src="/images/snapscout-circular-logo.png"
                   alt="SnapScout Logo"
                   width={32}
                   height={32}
                   className="rounded-full"
                 />
-                <span className="text-sm font-medium">SnapScout</span>
+                <span className="text-sm font-medium text-gray-800">SnapScout</span>
               </div>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-gray-500">
                 Step {currentStep} of {TOTAL_STEPS}
               </div>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-1">
               <div
-                className="bg-gradient-to-r from-[#E63946] to-[#FFCC00] h-1 rounded-full transition-all duration-500 ease-out"
+                className="bg-gradient-to-r from-red-500 to-yellow-500 h-1 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${(currentStep / TOTAL_STEPS) * 100}%` }}
               />
             </div>
@@ -250,8 +182,8 @@ function OnboardingFlow({ initialStep }: { initialStep: number }) {
         </div>
       )}
 
-      {/* Main Content - Fixed scrolling issues */}
-      <div className={`${currentStep < 8 ? 'pt-8' : ''} min-h-screen pb-32`}>
+      {/* Main Content */}
+      <div className="min-h-screen pb-32 pt-8">
         <div className="container mx-auto px-4 py-8">
           <AnimatePresence mode="wait">
             <motion.div
@@ -268,9 +200,9 @@ function OnboardingFlow({ initialStep }: { initialStep: number }) {
         </div>
       </div>
 
-      {/* Navigation (for steps 2-7) */}
+      {/* Navigation */}
       {currentStep > 1 && currentStep < 8 && (
-        <div className="bg-white/80 backdrop-blur-sm border-t fixed bottom-0 left-0 right-0 p-4 z-50">
+        <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 p-4 z-50">
           <div className="container mx-auto flex justify-between items-center">
             <Button
               variant="ghost"
@@ -288,34 +220,20 @@ function OnboardingFlow({ initialStep }: { initialStep: number }) {
                   onClick={() => goToStep(i + 1)}
                   className={`w-2 h-2 rounded-full transition-all ${
                     i + 1 === currentStep
-                      ? 'bg-[#E63946] w-6'
+                      ? 'bg-primary w-6'
                       : i + 1 < currentStep
-                      ? 'bg-[#8BC34A]'
+                      ? 'bg-green-500'
                       : 'bg-gray-300'
                   }`}
+                  aria-label={`Go to step ${i + 1}`}
                 />
               ))}
             </div>
 
-            <div className="w-16" /> {/* Spacer for centering */}
+            <div className="w-24" /> {/* Spacer for centering */}
           </div>
         </div>
       )}
-    </div>
-  )
-}
-
-export default async function OnboardingPage() {
-  const user = await getCurrentUser()
-  if (!user) {
-    redirect("/auth/login")
-  }
-
-  const onboardingStep = cookies().get("onboarding_step")?.value || "1"
-
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
-      <OnboardingFlow initialStep={parseInt(onboardingStep)} />
     </div>
   )
 }

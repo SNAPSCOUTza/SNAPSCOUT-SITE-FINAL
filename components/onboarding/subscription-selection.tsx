@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Check, Crown, Search, Building2, ArrowRight } from 'lucide-react'
-import { OnboardingData } from "@/app/onboarding/page"
+import type { OnboardingData } from "@/app/onboarding/page"
 
 interface SubscriptionSelectionProps {
   onNext: () => void
@@ -87,10 +87,10 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
       >
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-white">
+          <h1 className="text-4xl font-bold text-gray-900">
             Choose your plan
           </h1>
-          <p className="text-xl text-gray-300">
+          <p className="text-xl text-gray-700">
             Select the plan that fits your needs. Start with a 14-day free trial.
           </p>
         </div>
@@ -114,7 +114,7 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
                 {/* Popular Badge */}
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <Badge className="bg-[#FFCC00] text-black font-semibold px-4 py-1">
+                    <Badge className="bg-yellow-400 text-black font-semibold px-4 py-1">
                       Most Popular
                     </Badge>
                   </div>
@@ -123,18 +123,18 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
                 {/* Recommended Badge */}
                 {isRecommended && !plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <Badge className="bg-[#8BC34A] text-white font-semibold px-4 py-1">
+                    <Badge className="bg-green-500 text-white font-semibold px-4 py-1">
                       Recommended
                     </Badge>
                   </div>
                 )}
 
                 <Card
-                  className={`glass-card cursor-pointer transition-all duration-300 hover:scale-105 h-full ${
+                  className={`cursor-pointer transition-all duration-300 hover:scale-105 h-full border-2 ${
                     isSelected
-                      ? `border-[${plan.color}] shadow-[0_0_20px_rgba(230,57,70,0.3)]`
-                      : 'border-white/10 hover:border-white/30'
-                  } ${plan.popular ? 'border-[#FFCC00] shadow-[0_0_20px_rgba(255,204,0,0.3)]' : ''}`}
+                      ? 'border-primary shadow-lg bg-red-50'
+                      : 'border-gray-200 hover:border-primary/50 bg-white'
+                  } ${plan.popular ? 'border-yellow-400 shadow-lg' : ''}`}
                   onClick={() => handlePlanSelection(key)}
                 >
                   <CardHeader className="text-center space-y-4 pb-6">
@@ -144,14 +144,14 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
                     </div>
                     
                     <div className="space-y-2">
-                      <CardTitle className="text-2xl text-white">
+                      <CardTitle className="text-2xl text-gray-900">
                         {plan.name}
                       </CardTitle>
                       <div className="space-y-1">
-                        <div className="text-4xl font-bold text-white">
+                        <div className="text-4xl font-bold text-gray-900">
                           {plan.price}
                         </div>
-                        <p className="text-gray-400">
+                        <p className="text-gray-600">
                           {isFree ? plan.period : `per ${plan.period}`}
                         </p>
                       </div>
@@ -167,7 +167,7 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
                                style={{ backgroundColor: `${plan.color}20` }}>
                             <Check className="w-3 h-3" style={{ color: plan.color }} />
                           </div>
-                          <span className="text-gray-300 text-sm leading-relaxed">
+                          <span className="text-gray-700 text-sm leading-relaxed">
                             {feature}
                           </span>
                         </div>
@@ -178,10 +178,10 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
                     <Button
                       className={`w-full py-3 font-semibold transition-all ${
                         isFree
-                          ? 'bg-[#8BC34A] hover:bg-[#8BC34A]/90 text-white'
+                          ? 'bg-green-500 hover:bg-green-600 text-white'
                           : key === 'creator'
-                          ? 'bg-[#E63946] hover:bg-[#E63946]/90 text-white'
-                          : 'bg-[#2B2D42] hover:bg-[#2B2D42]/90 text-white'
+                          ? 'bg-primary hover:bg-primary/90 text-primary-foreground'
+                          : 'bg-gray-800 hover:bg-gray-900 text-white'
                       }`}
                       onClick={() => handlePlanSelection(key)}
                     >
@@ -189,7 +189,7 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
                     </Button>
 
                     {!isFree && (
-                      <p className="text-xs text-gray-400 text-center">
+                      <p className="text-xs text-gray-500 text-center">
                         14-day free trial • No credit card required
                       </p>
                     )}
@@ -207,11 +207,11 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center space-y-4"
         >
-          <div className="p-6 glass-card border-white/10 max-w-2xl mx-auto">
-            <h3 className="text-lg font-semibold text-white mb-2">
+          <div className="p-6 bg-gray-50 border border-gray-200 rounded-lg max-w-2xl mx-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
               14-Day Free Trial
             </h3>
-            <p className="text-gray-300 text-sm">
+            <p className="text-gray-700 text-sm">
               Try any paid plan free for 14 days. No credit card required. 
               Cancel anytime during the trial period with no charges.
             </p>
@@ -222,7 +222,7 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
             <Button
               variant="ghost"
               onClick={onNext}
-              className="text-gray-400 hover:text-white hover:bg-white/5"
+              className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
             >
               Skip for now
             </Button>
@@ -242,7 +242,7 @@ export default function SubscriptionSelection({ onNext, onPrev, data, updateData
           >
             <Button
               onClick={onNext}
-              className="bg-[#E63946] hover:bg-[#E63946]/90 text-white px-8 py-3"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3"
               size="lg"
             >
               Continue with {plans[data.selectedPlan as keyof typeof plans]?.name}
