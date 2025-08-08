@@ -178,7 +178,6 @@ interface ProfileData {
 
 export default function ProfileSetupPage() {
   const [user, setUser] = useState<any>(null)
-  const [subscription, setSubscription] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -213,6 +212,8 @@ export default function ProfileSetupPage() {
     services: [],
     verified: false
   })
+
+  // ... (UI logic functions like updateProfileData, toggleProvince, etc. remain the same)
 
   const updateProfileData = (updates: Partial<ProfileData>) => {
     setProfileData(prev => ({ ...prev, ...updates }))
@@ -290,19 +291,19 @@ export default function ProfileSetupPage() {
     try {
       const { error } = await supabase.from("user_profiles").upsert({
         user_id: user.id,
-        first_name: profileData.firstName,
-        last_name: profileData.lastName,
+        full_name: `${profileData.firstName} ${profileData.lastName}`,
+        display_name: `${profileData.firstName} ${profileData.lastName}`,
         email: profileData.email,
         phone: profileData.phone,
         bio: profileData.bio,
-        selected_provinces: profileData.selectedProvinces,
-        selected_cities: profileData.selectedCities,
+        provinces: profileData.selectedProvinces.join(', '), // Save as comma-separated string
+        cities: profileData.selectedCities.join(', '),       // Save as comma-separated string
         willing_to_travel: profileData.willingToTravel,
         user_type: profileData.userType,
         specializations: profileData.specializations,
-        experience: profileData.experience,
+        experience_level: profileData.experience,
         hourly_rate: profileData.hourlyRate,
-        availability: profileData.availability,
+        availability_status: profileData.availability,
         software_skills: profileData.softwareSkills,
         technical_skills: profileData.technicalSkills,
         photography_skills: profileData.photographySkills,
@@ -311,13 +312,13 @@ export default function ProfileSetupPage() {
         instagram: profileData.instagram,
         twitter: profileData.twitter,
         linkedin: profileData.linkedin,
-        imdb: profileData.imdb,
+        imdb_profile: profileData.imdb,
         portfolio_images: profileData.portfolioImages,
-        equipment: profileData.equipment,
-        services: profileData.services,
-        verified: profileData.verified,
+        gear_owned: profileData.equipment,
+        services_offered: profileData.services,
+        is_verified: profileData.verified,
         updated_at: new Date().toISOString(),
-      })
+      }, { onConflict: 'user_id' })
 
       if (error) {
         setError(error.message)
@@ -335,30 +336,14 @@ export default function ProfileSetupPage() {
   }
 
   useEffect(() => {
-    const checkUserAndSubscription = async () => {
+    const checkUserAndLoadData = async () => {
       const currentUser = await getCurrentUser()
       if (!currentUser) {
         router.push("/auth/login")
         return
       }
-
       setUser(currentUser)
 
-      // Check subscription status
-      const { data: subData } = await supabase
-        .from("user_subscriptions")
-        .select("*")
-        .eq("user_id", currentUser.id)
-        .single()
-
-      if (!subData || subData.status !== "active") {
-        router.push("/subscribe")
-        return
-      }
-
-      setSubscription(subData)
-
-      // Load existing profile data if it exists
       const { data: existingProfile } = await supabase
         .from("user_profiles")
         .select("*")
@@ -366,20 +351,21 @@ export default function ProfileSetupPage() {
         .single()
 
       if (existingProfile) {
+        const [firstName, ...lastNameParts] = (existingProfile.full_name || "").split(" ")
         setProfileData({
-          firstName: existingProfile.first_name || "",
-          lastName: existingProfile.last_name || "",
+          firstName: firstName || "",
+          lastName: lastNameParts.join(" ") || "",
           email: existingProfile.email || "",
           phone: existingProfile.phone || "",
           bio: existingProfile.bio || "",
-          selectedProvinces: existingProfile.selected_provinces || [],
-          selectedCities: existingProfile.selected_cities || [],
+          selectedProvinces: existingProfile.provinces?.split(',').map((p:string) => p.trim()) || [],
+          selectedCities: existingProfile.cities?.split(',').map((c:string) => c.trim()) || [],
           willingToTravel: existingProfile.willing_to_travel || false,
           userType: existingProfile.user_type || 'creator',
           specializations: existingProfile.specializations || [],
-          experience: existingProfile.experience || "",
+          experience: existingProfile.experience_level || "",
           hourlyRate: existingProfile.hourly_rate || "",
-          availability: existingProfile.availability || "Available",
+          availability: existingProfile.availability_status || "Available",
           softwareSkills: existingProfile.software_skills || [],
           technicalSkills: existingProfile.technical_skills || [],
           photographySkills: existingProfile.photography_skills || [],
@@ -388,18 +374,16 @@ export default function ProfileSetupPage() {
           instagram: existingProfile.instagram || "",
           twitter: existingProfile.twitter || "",
           linkedin: existingProfile.linkedin || "",
-          imdb: existingProfile.imdb || "",
+          imdb: existingProfile.imdb_profile || "",
           portfolioImages: existingProfile.portfolio_images || [],
-          equipment: existingProfile.equipment || [],
-          services: existingProfile.services || [],
-          verified: existingProfile.verified || false
+          equipment: existingProfile.gear_owned || [],
+          services: existingProfile.services_offered || [],
+          verified: existingProfile.is_verified || false
         })
       }
-
       setLoading(false)
     }
-
-    checkUserAndSubscription()
+    checkUserAndLoadData()
   }, [router])
 
   const isBasicComplete = profileData.firstName && profileData.lastName && profileData.email
@@ -418,6 +402,7 @@ export default function ProfileSetupPage() {
   }
 
   return (
+    // JSX remains the same
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="container mx-auto px-4 py-8">
         <motion.div

@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { User, Settings, CreditCard, Eye, EyeOff, CheckCircle, XCircle, Crown, LogOut, Camera, Edit, Calendar, Upload, Globe, Instagram, Linkedin, Youtube, DollarSign, Shield, Bell, Trash2, Save, Star } from 'lucide-react'
+import { User, Settings, CreditCard, Eye, EyeOff, CheckCircle, XCircle, Crown, LogOut, Camera, Edit, Calendar, Upload, Globe, Instagram, Linkedin, Youtube, DollarSign, Shield, Bell, Trash2, Save, Star, BarChart3 } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 import { getCurrentUser, signOut, updatePassword, supabase } from "@/lib/auth"
@@ -22,26 +22,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { provinces, citiesByProvince } from "@/lib/locations"
 
+// Unified UserProfile interface
 interface UserProfile {
 id: string
+user_id: string
 display_name: string | null
 full_name: string | null
 profile_picture: string | null
 bio: string | null
-phone_number: string | null
-website_url: string | null
-instagram_url: string | null
-facebook_url: string | null
-linkedin_url: string | null
-youtube_vimeo: string | null
+phone: string | null
+website: string | null
+instagram: string | null
+facebook: string | null
+linkedin: string | null
+youtube: string | null
 imdb_profile: string | null
-province_country: string | null
-city: string | null
+provinces: string | null // Comma-separated string
+cities: string | null    // Comma-separated string
 location: string | null
 department: string | null
 profession: string | null
 roles: string[] | null
-availability: string | null
+availability_status: string | null
 experience_level: string | null
 years_experience: string | null
 daily_rate: string | null
@@ -98,12 +100,10 @@ const [profileData, setProfileData] = useState({
   bio: "",
   profile_picture: "",
   location: "",
-  city: "",
-  province: "",
   department: "",
   profession: "",
   roles: [] as string[],
-  availability: "available",
+  availability_status: "available",
   experience_level: "",
   years_experience: "",
   daily_rate: "",
@@ -115,15 +115,15 @@ const [profileData, setProfileData] = useState({
   special_skills: [] as string[],
   instagram: "",
   linkedin: "",
-  youtube_vimeo: "",
+  youtube: "",
   website: "",
   imdb_profile: "",
   phone: "",
   facebook: "",
-  youtube: "",
   rate_card_visible: true,
   contact_info_visible: true,
   is_profile_visible: false,
+  portfolio_images: [] as string[],
 })
 
 const [selectedProvince, setSelectedProvince] = useState<string>("")
@@ -136,7 +136,6 @@ useEffect(() => {
       router.push("/auth/login")
       return
     }
-
     setUser(currentUser)
 
     const { data: subData } = await supabase
@@ -144,29 +143,26 @@ useEffect(() => {
       .select("*")
       .eq("user_id", currentUser.id)
       .single()
-
     setSubscription(subData)
 
     const { data: profileDataDB } = await supabase
       .from("user_profiles")
       .select("*")
-      .eq("id", currentUser.id)
+      .eq("user_id", currentUser.id)
       .single()
 
     if (profileDataDB) {
-      setProfile(profileDataDB)
+      setProfile(profileDataDB as UserProfile)
       setProfileData({
         display_name: profileDataDB.display_name || "",
         full_name: profileDataDB.full_name || "",
         bio: profileDataDB.bio || "",
         profile_picture: profileDataDB.profile_picture || "",
         location: profileDataDB.location || "",
-        city: profileDataDB.city || "",
-        province: profileDataDB.province || "",
         department: profileDataDB.department || "",
         profession: profileDataDB.profession || "",
         roles: profileDataDB.roles || [],
-        availability: profileDataDB.availability || "available",
+        availability_status: profileDataDB.availability_status || "available",
         experience_level: profileDataDB.experience_level || "",
         years_experience: profileDataDB.years_experience || "",
         daily_rate: profileDataDB.daily_rate || "",
@@ -176,21 +172,24 @@ useEffect(() => {
         services_offered: profileDataDB.services_offered || [],
         gear_owned: profileDataDB.gear_owned || [],
         special_skills: profileDataDB.special_skills || [],
-        instagram: profileDataDB.instagram_url || "",
-        linkedin: profileDataDB.linkedin_url || "",
-        youtube_vimeo: profileDataDB.youtube_vimeo || "",
-        website: profileDataDB.website_url || "",
-        imdb_profile: profileDataDB.imdb_profile || "",
-        phone: profileDataDB.phone_number || "",
-        facebook: profileDataDB.facebook_url || "",
+        instagram: profileDataDB.instagram || "",
+        linkedin: profileDataDB.linkedin || "",
         youtube: profileDataDB.youtube || "",
+        website: profileDataDB.website || "",
+        imdb_profile: profileDataDB.imdb_profile || "",
+        phone: profileDataDB.phone || "",
+        facebook: profileDataDB.facebook || "",
         rate_card_visible: profileDataDB.rate_card_visible ?? true,
         contact_info_visible: profileDataDB.contact_info_visible ?? true,
         is_profile_visible: profileDataDB.is_profile_visible ?? false,
+        portfolio_images: profileDataDB.portfolio_images || [],
       })
 
-      setSelectedProvince(profileDataDB.province || "")
-      setSelectedCity(profileDataDB.city || "")
+      const currentProvinces = profileDataDB.provinces?.split(',').map((p: string) => p.trim()) || []
+      const currentCities = profileDataDB.cities?.split(',').map((c: string) => c.trim()) || []
+      
+      setSelectedProvince(currentProvinces[0] || "")
+      setSelectedCity(currentCities[0] || "")
 
       setStats({
         profileViews: profileDataDB.profile_views || 0,
@@ -199,10 +198,8 @@ useEffect(() => {
         favoriteCount: profileDataDB.favorite_count || 0,
       })
     }
-
     setLoading(false)
   }
-
   checkUserAndSubscription()
 }, [router])
 
@@ -212,28 +209,24 @@ const handleSignOut = async () => {
 }
 
 const handleInputChange = (field: string, value: any) => {
-  setProfileData((prev) => ({
-    ...prev,
-    [field]: value,
-  }))
+  setProfileData((prev) => ({ ...prev, [field]: value }))
 }
 
 const handleSaveProfile = async () => {
   setSaving(true)
   try {
     const dataToSave = {
-      id: user.id,
+      user_id: user.id,
       display_name: profileData.display_name,
       full_name: profileData.full_name,
       bio: profileData.bio,
       profile_picture: profileData.profile_picture,
-      location: profileData.location,
-      city: selectedCity,
-      province: selectedProvince,
+      provinces: selectedProvince,
+      cities: selectedCity,
       department: profileData.department,
       profession: profileData.profession,
       roles: profileData.roles,
-      availability: profileData.availability,
+      availability_status: profileData.availability_status,
       experience_level: profileData.experience_level,
       years_experience: profileData.years_experience,
       daily_rate: profileData.daily_rate,
@@ -243,21 +236,21 @@ const handleSaveProfile = async () => {
       services_offered: profileData.services_offered,
       gear_owned: profileData.gear_owned,
       special_skills: profileData.special_skills,
-      instagram_url: profileData.instagram,
-      linkedin_url: profileData.linkedin,
-      youtube_vimeo: profileData.youtube_vimeo,
-      website_url: profileData.website,
-      imdb_profile: profileData.imdb_profile,
-      phone_number: profileData.phone,
-      facebook_url: profileData.facebook,
+      instagram: profileData.instagram,
+      linkedin: profileData.linkedin,
       youtube: profileData.youtube,
+      website: profileData.website,
+      imdb_profile: profileData.imdb_profile,
+      phone: profileData.phone,
+      facebook: profileData.facebook,
       rate_card_visible: profileData.rate_card_visible,
       contact_info_visible: profileData.contact_info_visible,
       is_profile_visible: profileData.is_profile_visible,
+      portfolio_images: profileData.portfolio_images,
       updated_at: new Date().toISOString(),
     }
 
-    const { error } = await supabase.from("user_profiles").upsert(dataToSave, { onConflict: 'id' })
+    const { error } = await supabase.from("user_profiles").upsert(dataToSave, { onConflict: 'user_id' })
 
     if (error) {
       console.error("Error saving profile:", error)
@@ -266,7 +259,7 @@ const handleSaveProfile = async () => {
       const { data: updatedProfile } = await supabase
         .from("user_profiles")
         .select("*")
-        .eq("id", user.id)
+        .eq("user_id", user.id)
         .single()
 
       if (updatedProfile) {
@@ -302,7 +295,6 @@ const handlePasswordUpdate = async (e: React.FormEvent) => {
 
   try {
     const { error } = await updatePassword(newPassword)
-
     if (error) {
       setPasswordError(error.message)
     } else {
@@ -321,6 +313,19 @@ const handleContactSupport = () => {
   window.location.href = "mailto:support@snapscout.com"
 }
 
+const handleManageBilling = async () => {
+  try {
+    const response = await fetch('/api/create-portal-session', {
+      method: 'POST',
+    });
+    const { url } = await response.json();
+    window.location.href = url;
+  } catch (error) {
+    console.error('Error creating portal session:', error);
+    alert('Could not manage billing at this time. Please try again later.');
+  }
+};
+
 if (loading) {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -332,16 +337,9 @@ if (loading) {
   )
 }
 
-const departmentOptions = [
-  "Camera", "Audio", "Lighting", "Production", "Art", "Hair & Makeup", "Post Production", "Direction",
-]
-
-const professionOptions = [
-  "Photographer", "Videographer", "Director", "Producer", "Editor", "Sound Engineer", "Lighting Technician", "Camera Operator", "Makeup Artist", "Art Director",
-]
-
-const experienceLevelOptions = ["Entry", "Mid", "Senior"]
-
+const departmentOptions = ["Camera", "Audio", "Lighting", "Production", "Art", "Hair & Makeup", "Post Production", "Direction"]
+const professionOptions = ["Photographer", "Videographer", "Director", "Producer", "Editor", "Sound Engineer", "Lighting Technician", "Camera Operator", "Makeup Artist", "Art Director"]
+const experienceLevelOptions = ["Entry", "Mid", "Senior", "Expert"]
 const isSubscribed = subscription && subscription.status === "active"
 
 return (
@@ -356,13 +354,8 @@ return (
                 <p className="font-medium">Upgrade to Pro to make your profile visible to clients</p>
                 <p className="text-sm mt-1">You can create and edit your profile, but it won't be discoverable until you subscribe.</p>
               </div>
-              <Button
-                onClick={() => (window.location.href = "https://buy.stripe.com/test_28o5lq0Hy9Hn6nS4gg")}
-                size="sm"
-                className="ml-4 bg-amber-600 hover:bg-amber-700"
-              >
-                <Crown className="h-4 w-4 mr-1" />
-                Upgrade Now
+              <Button onClick={() => (window.location.href = "https://buy.stripe.com/test_28o5lq0Hy9Hn6nS4gg")} size="sm" className="ml-4 bg-amber-600 hover:bg-amber-700">
+                <Crown className="h-4 w-4 mr-1" /> Upgrade Now
               </Button>
             </AlertDescription>
           </Alert>
@@ -370,9 +363,14 @@ return (
       )}
 
       <div className="max-w-6xl mx-auto">
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-          <p className="text-gray-600">Manage your SnapScout account, subscription, and professional profile</p>
+        <div className="mb-6 sm:mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+            <p className="text-gray-600">Manage your SnapScout account, subscription, and professional profile</p>
+          </div>
+          <Button onClick={handleSaveProfile} className="bg-red-700 hover:bg-red-800" disabled={saving}>
+            <Save className="h-4 w-4 mr-2" />{saving ? "Saving..." : "Save All Changes"}
+          </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -386,159 +384,61 @@ return (
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
-            {!profile && (
-              <Alert className="border-red-200 bg-red-50">
-                <User className="h-4 w-4 text-red-600" />
-                <AlertDescription className="flex items-center justify-between text-red-800">
-                  <span>Complete your professional profile to get discovered by clients!</span>
-                  <Button size="sm" className="ml-4 bg-red-700 hover:bg-red-800" onClick={() => setActiveTab("profile")}>
-                    <Edit className="h-4 w-4 mr-1" />
-                    Create Profile
-                  </Button>
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <Card>
-                  <CardContent className="p-4 text-center">
-                    <Eye className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-gray-900">{stats.profileViews}</p>
-                    <p className="text-sm text-gray-600">Profile Views</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-4 text-center">
-                    <Calendar className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-gray-900">{stats.bookingRequests}</p>
-                    <p className="text-sm text-gray-600">Bookings</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-4 text-center">
-                    <User className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-gray-900">{stats.contactClicks}</p>
-                    <p className="text-sm text-gray-600">Contacts</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardContent className="p-4 text-center">
-                    <CheckCircle className="h-8 w-8 text-red-600 mx-auto mb-2" />
-                    <p className="text-2xl font-bold text-gray-900">{stats.favoriteCount}</p>
-                    <p className="text-sm text-gray-600">Favorites</p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <Card>
-                <CardHeader><CardTitle>Quick Actions</CardTitle></CardHeader>
-                <CardContent className="space-y-3">
-                  <Button asChild variant="outline" className="w-full justify-start bg-transparent">
-                    <Link href="/find-crew"><Camera className="h-4 w-4 mr-2" />Browse Film Crew</Link>
-                  </Button>
-                  {profile ? (
-                    <Button asChild variant="outline" className="w-full justify-start bg-transparent">
-                      <Link href={`/crew/${user.id}`}><User className="h-4 w-4 mr-2" />View My Profile</Link>
-                    </Button>
-                  ) : (
-                    <Button className="w-full justify-start bg-red-700 hover:bg-red-800" onClick={() => setActiveTab("profile")}>
-                      <Edit className="h-4 w-4 mr-2" />Create Profile
-                    </Button>
-                  )}
-                  <Button onClick={handleContactSupport} variant="outline" className="w-full justify-start bg-transparent">
-                    <CreditCard className="h-4 w-4 mr-2" />Contact Support
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center"><Crown className="h-5 w-5 mr-2 text-red-700" />Subscription Status</CardTitle>
+                <CardTitle>Welcome back, {profileData.display_name || user?.email}!</CardTitle>
+                <CardDescription>Here's a quick look at your profile's performance.</CardDescription>
               </CardHeader>
               <CardContent>
-                {isSubscribed ? (
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
-                    <div>
-                      <Badge className="bg-green-100 text-green-800 mb-2"><CheckCircle className="h-3 w-3 mr-1" />Active</Badge>
-                      <p className="text-sm text-gray-600">Pro Crew Member</p>
-                    </div>
-                    <div className="text-left sm:text-right">
-                      <p className="font-semibold">R60/month</p>
-                      <p className="text-sm text-gray-600">Next billing: {subscription?.stripe_current_period_end ? new Date(subscription.stripe_current_period_end).toLocaleDateString() : 'N/A'}</p>
-                    </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div className="p-4 bg-gray-100 rounded-lg">
+                    <Eye className="mx-auto h-6 w-6 text-red-700 mb-2" />
+                    <p className="text-2xl font-bold">{stats.profileViews}</p>
+                    <p className="text-sm text-gray-600">Profile Views</p>
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                      <div>
-                        <Badge className="bg-gray-100 text-gray-800 mb-2"><XCircle className="h-3 w-3 mr-1" />Free Account</Badge>
-                        <p className="text-sm text-gray-600">Profile not visible to clients</p>
-                      </div>
-                      <div className="text-left sm:text-right">
-                        <p className="font-semibold text-gray-500">R0/month</p>
-                        <p className="text-sm text-gray-600">Limited features</p>
-                      </div>
-                    </div>
-                    <div className="border-t pt-4">
-                      <p className="text-sm text-gray-600 mb-3">Upgrade to Pro to:</p>
-                      <ul className="text-sm text-gray-600 space-y-1 mb-4">
-                        <li className="flex items-center"><CheckCircle className="h-3 w-3 text-green-600 mr-2" />Make your profile discoverable</li>
-                        <li className="flex items-center"><CheckCircle className="h-3 w-3 text-green-600 mr-2" />Receive client inquiries</li>
-                        <li className="flex items-center"><CheckCircle className="h-3 w-3 text-green-600 mr-2" />Access booking system</li>
-                      </ul>
-                      <Button onClick={() => (window.location.href = "https://buy.stripe.com/test_28o5lq0Hy9Hn6nS4gg")} className="w-full bg-red-700 hover:bg-red-800">
-                        <Crown className="h-4 w-4 mr-2" />Upgrade to Pro - R60/month
-                      </Button>
-                    </div>
+                  <div className="p-4 bg-gray-100 rounded-lg">
+                    <User className="mx-auto h-6 w-6 text-red-700 mb-2" />
+                    <p className="text-2xl font-bold">{stats.contactClicks}</p>
+                    <p className="text-sm text-gray-600">Contact Clicks</p>
                   </div>
-                )}
+                  <div className="p-4 bg-gray-100 rounded-lg">
+                    <Calendar className="mx-auto h-6 w-6 text-red-700 mb-2" />
+                    <p className="text-2xl font-bold">{stats.bookingRequests}</p>
+                    <p className="text-sm text-gray-600">Booking Requests</p>
+                  </div>
+                  <div className="p-4 bg-gray-100 rounded-lg">
+                    <Star className="mx-auto h-6 w-6 text-red-700 mb-2" />
+                    <p className="text-2xl font-bold">{stats.favoriteCount}</p>
+                    <p className="text-sm text-gray-600">Favorites</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
-
-            {profile && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <User className="h-5 w-5 mr-2" />Professional Profile
-                    {!isSubscribed && <Badge className="ml-2 bg-amber-100 text-amber-800"><EyeOff className="h-3 w-3 mr-1" />Hidden</Badge>}
-                  </CardTitle>
-                  <CardDescription>{isSubscribed ? "Your public profile that clients can discover" : "Your profile is ready but not visible to clients until you upgrade"}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                    <div className="flex items-center space-x-4 mb-4 sm:mb-0">
-                      <Avatar className="w-12 h-12">
-                        <AvatarImage src={profile.profile_picture || "/placeholder.svg"} alt={profile.display_name || "User"} />
-                        <AvatarFallback>{profile.display_name?.charAt(0)?.toUpperCase() || "U"}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-semibold">{profile.display_name}</p>
-                        <p className="text-sm text-gray-600">{profile.roles?.join(" • ")}</p>
-                        <p className="text-sm text-gray-500">{profile.city}, {profile.province_country}</p>
-                      </div>
-                    </div>
-                    <div className="flex space-x-3">
-                      <Button asChild variant="outline" className="bg-transparent"><Link href={`/crew/${user.id}`}><Eye className="h-4 w-4 mr-2" />Preview Profile</Link></Button>
-                      <Button className="bg-red-700 hover:bg-red-800" onClick={() => setActiveTab("profile")}><Edit className="h-4 w-4 mr-2" />Edit Profile</Button>
-                    </div>
-                  </div>
-                  {!isSubscribed && (
-                    <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                      <p className="text-sm text-amber-800"><EyeOff className="h-4 w-4 inline mr-1" />Your profile is complete but not visible in search results. Upgrade to Pro to make it discoverable by clients.</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-4">
+                <Button variant="outline" onClick={() => setActiveTab('profile')}>
+                  <Edit className="h-4 w-4 mr-2" /> Edit Profile
+                </Button>
+                <Button variant="outline" onClick={() => setActiveTab('portfolio')}>
+                  <Camera className="h-4 w-4 mr-2" /> Manage Portfolio
+                </Button>
+                <Link href={`/profile/${user?.id}`} passHref>
+                  <Button variant="outline" asChild>
+                    <a><Eye className="h-4 w-4 mr-2" /> View Public Profile</a>
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="profile" className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle>Basic Information</CardTitle>
-                <CardDescription>Your core professional details</CardDescription>
+                <CardDescription>Your core professional details. This information will be public on your profile.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -557,14 +457,14 @@ return (
                 </div>
                 <div>
                   <Label htmlFor="bio">Bio</Label>
-                  <Textarea id="bio" value={profileData.bio} onChange={(e) => handleInputChange("bio", e.target.value)} placeholder="Tell clients about yourself, your style, and what makes you unique..." rows={4} />
+                  <Textarea id="bio" value={profileData.bio} onChange={(e) => handleInputChange("bio", e.target.value)} placeholder="Tell clients about yourself..." rows={4} />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="province">Province</Label>
                     <Select value={selectedProvince} onValueChange={(value) => {
                       setSelectedProvince(value);
-                      setSelectedCity(""); // Reset city when province changes
+                      setSelectedCity("");
                     }}>
                       <SelectTrigger id="province"><SelectValue placeholder="Select Province" /></SelectTrigger>
                       <SelectContent>
@@ -582,81 +482,87 @@ return (
                     </Select>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Professional Details</CardTitle>
+                <CardDescription>Help clients understand your expertise.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="department">Department</Label>
                     <Select value={profileData.department} onValueChange={(value) => handleInputChange("department", value)}>
                       <SelectTrigger id="department"><SelectValue placeholder="Select Department" /></SelectTrigger>
-                      <SelectContent>
-                        {departmentOptions.map((option) => (<SelectItem key={option} value={option}>{option}</SelectItem>))}
-                      </SelectContent>
+                      <SelectContent>{departmentOptions.map((option) => (<SelectItem key={option} value={option}>{option}</SelectItem>))}</SelectContent>
                     </Select>
                   </div>
                   <div>
                     <Label htmlFor="profession">Profession</Label>
                     <Select value={profileData.profession} onValueChange={(value) => handleInputChange("profession", value)}>
                       <SelectTrigger id="profession"><SelectValue placeholder="Select Profession" /></SelectTrigger>
-                      <SelectContent>
-                        {professionOptions.map((option) => (<SelectItem key={option} value={option}>{option}</SelectItem>))}
-                      </SelectContent>
+                      <SelectContent>{professionOptions.map((option) => (<SelectItem key={option} value={option}>{option}</SelectItem>))}</SelectContent>
                     </Select>
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="roles">Roles (comma-separated)</Label>
-                  <Input id="roles" value={profileData.roles.join(", ")} onChange={(e) => handleInputChange("roles", e.target.value.split(", ").filter(Boolean))} placeholder="e.g., Photographer, Videographer, Editor" />
+                  <Input id="roles" value={profileData.roles.join(", ")} onChange={(e) => handleInputChange("roles", e.target.value.split(",").map(s => s.trim()).filter(Boolean))} placeholder="e.g., Photographer, Videographer" />
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="is_profile_visible" checked={profileData.is_profile_visible} onCheckedChange={(checked) => handleInputChange("is_profile_visible", checked)} disabled={!isSubscribed} />
-                  <Label htmlFor="is_profile_visible">Make my profile visible to clients</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="experience_level">Experience Level</Label>
+                    <Select value={profileData.experience_level} onValueChange={(value) => handleInputChange("experience_level", value)}>
+                      <SelectTrigger id="experience_level"><SelectValue placeholder="Select Experience Level" /></SelectTrigger>
+                      <SelectContent>{experienceLevelOptions.map((option) => (<SelectItem key={option} value={option}>{option}</SelectItem>))}</SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="years_experience">Years of Experience</Label>
+                    <Input id="years_experience" type="number" value={profileData.years_experience} onChange={(e) => handleInputChange("years_experience", e.target.value)} placeholder="e.g., 5" />
+                  </div>
                 </div>
-                {!isSubscribed && <p className="text-sm text-red-500">You need an active subscription to make your profile visible.</p>}
-                <Button onClick={handleSaveProfile} className="bg-red-700 hover:bg-red-800" disabled={saving}>
-                  <Save className="h-4 w-4 mr-2" />{saving ? "Saving..." : "Save Profile"}
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>
-
+          
           <TabsContent value="portfolio" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center"><Camera className="h-5 w-5 mr-2" />Portfolio Management</CardTitle>
-                <CardDescription>Upload and manage your portfolio images</CardDescription>
+                <CardTitle>Portfolio Management</CardTitle>
+                <CardDescription>Showcase your best work. Add URLs to your images.</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-4">Drag and drop images here, or click to select files</p>
-                  <Button variant="outline" className="bg-transparent"><Upload className="h-4 w-4 mr-2" />Choose Files</Button>
+              <CardContent className="space-y-4">
+                {profileData.portfolio_images.map((url, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <Input 
+                      value={url} 
+                      onChange={(e) => {
+                        const newImages = [...profileData.portfolio_images];
+                        newImages[index] = e.target.value;
+                        handleInputChange("portfolio_images", newImages);
+                      }}
+                      placeholder="https://example.com/image.jpg"
+                    />
+                    <Button variant="ghost" size="icon" onClick={() => {
+                      const newImages = profileData.portfolio_images.filter((_, i) => i !== index);
+                      handleInputChange("portfolio_images", newImages);
+                    }}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button variant="outline" onClick={() => handleInputChange("portfolio_images", [...profileData.portfolio_images, ""])}>
+                  <Upload className="h-4 w-4 mr-2" /> Add Image URL
+                </Button>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                  {profileData.portfolio_images.filter(Boolean).map((url, index) => (
+                    <div key={index} className="relative aspect-square">
+                      <Image src={url || "/placeholder.svg"} alt={`Portfolio image ${index + 1}`} layout="fill" objectFit="cover" className="rounded-md" />
+                    </div>
+                  ))}
                 </div>
-                <p className="text-sm text-gray-500 mt-4">Supported formats: JPG, PNG, GIF. Max file size: 10MB per image.</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Current Portfolio</CardTitle>
-                <CardDescription>Your uploaded portfolio images</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {profile?.portfolio_images && profile.portfolio_images.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {profile.portfolio_images.map((image: string, index: number) => (
-                      <div key={index} className="relative group">
-                        <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
-                          <Image src={image || "/placeholder.svg"} alt={`Portfolio ${index + 1}`} width={200} height={200} className="w-full h-full object-cover" />
-                        </div>
-                        <Button variant="destructive" size="sm" className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"><Trash2 className="h-4 w-4" /></Button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <Camera className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500">No portfolio images uploaded yet</p>
-                    <p className="text-sm text-gray-400 mt-2">Upload your best work to showcase your skills</p>
-                  </div>
-                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -664,41 +570,18 @@ return (
           <TabsContent value="social" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center"><Globe className="h-5 w-5 mr-2" />Social Media & Portfolio Links</CardTitle>
-                <CardDescription>Connect your social media profiles and portfolio</CardDescription>
+                <CardTitle>Social & Professional Links</CardTitle>
+                <CardDescription>Connect your other platforms to build trust and showcase more of your work.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="instagram">Instagram</Label>
-                  <div className="flex">
-                    <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"><Instagram className="h-4 w-4" /></span>
-                    <Input id="instagram" value={profileData.instagram} onChange={(e) => handleInputChange("instagram", e.target.value)} placeholder="https://instagram.com/yourusername" className="rounded-l-none" />
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div><Label htmlFor="website">Website</Label><Input id="website" value={profileData.website} onChange={(e) => handleInputChange("website", e.target.value)} placeholder="https://your-portfolio.com" /></div>
+                  <div><Label htmlFor="instagram">Instagram</Label><Input id="instagram" value={profileData.instagram} onChange={(e) => handleInputChange("instagram", e.target.value)} placeholder="https://instagram.com/username" /></div>
+                  <div><Label htmlFor="linkedin">LinkedIn</Label><Input id="linkedin" value={profileData.linkedin} onChange={(e) => handleInputChange("linkedin", e.target.value)} placeholder="https://linkedin.com/in/username" /></div>
+                  <div><Label htmlFor="youtube">YouTube</Label><Input id="youtube" value={profileData.youtube} onChange={(e) => handleInputChange("youtube", e.target.value)} placeholder="https://youtube.com/c/channel" /></div>
+                  <div><Label htmlFor="facebook">Facebook</Label><Input id="facebook" value={profileData.facebook} onChange={(e) => handleInputChange("facebook", e.target.value)} placeholder="https://facebook.com/username" /></div>
+                  <div><Label htmlFor="imdb_profile">IMDb Profile</Label><Input id="imdb_profile" value={profileData.imdb_profile} onChange={(e) => handleInputChange("imdb_profile", e.target.value)} placeholder="https://imdb.com/name/nm..." /></div>
                 </div>
-                <div>
-                  <Label htmlFor="linkedin">LinkedIn</Label>
-                  <div className="flex">
-                    <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"><Linkedin className="h-4 w-4" /></span>
-                    <Input id="linkedin" value={profileData.linkedin} onChange={(e) => handleInputChange("linkedin", e.target.value)} placeholder="https://linkedin.com/in/yourusername" className="rounded-l-none" />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="youtube_vimeo">YouTube/Vimeo</Label>
-                  <div className="flex">
-                    <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"><Youtube className="h-4 w-4" /></span>
-                    <Input id="youtube_vimeo" value={profileData.youtube_vimeo} onChange={(e) => handleInputChange("youtube_vimeo", e.target.value)} placeholder="https://youtube.com/@yourusername" className="rounded-l-none" />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="website">Website/Portfolio</Label>
-                  <div className="flex">
-                    <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm"><Globe className="h-4 w-4" /></span>
-                    <Input id="website" value={profileData.website} onChange={(e) => handleInputChange("website", e.target.value)} placeholder="https://yourwebsite.com" className="rounded-l-none" />
-                  </div>
-                </div>
-                <Button onClick={handleSaveProfile} className="bg-red-700 hover:bg-red-800" disabled={saving}>
-                  <Save className="h-4 w-4 mr-2" />{saving ? "Saving..." : "Save Social Links"}
-                </Button>
               </CardContent>
             </Card>
           </TabsContent>
@@ -706,43 +589,59 @@ return (
           <TabsContent value="settings" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center"><User className="h-5 w-5 mr-2" />Account Information</CardTitle>
+                <CardTitle>Profile Visibility</CardTitle>
+                <CardDescription>Control who can see your profile and contact information.</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <p className="text-sm font-medium text-gray-700">Email</p>
-                  <p className="text-sm text-gray-600">{user?.email}</p>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-3 rounded-md border">
+                  <div>
+                    <Label htmlFor="is_profile_visible">Profile Visibility</Label>
+                    <p className="text-sm text-gray-500">Allow your profile to be discovered by clients.</p>
+                  </div>
+                  <Switch id="is_profile_visible" checked={profileData.is_profile_visible} onCheckedChange={(checked) => handleInputChange("is_profile_visible", checked)} disabled={!isSubscribed} />
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-700">Member Since</p>
-                  <p className="text-sm text-gray-600">{user?.created_at ? new Date(user.created_at).toLocaleDateString() : "N/A"}</p>
+                {!isSubscribed && <p className="text-sm text-red-500">You need an active subscription to make your profile visible.</p>}
+                <div className="flex items-center justify-between p-3 rounded-md border">
+                  <div>
+                    <Label htmlFor="contact_info_visible">Contact Info Visibility</Label>
+                    <p className="text-sm text-gray-500">Show your phone number and email on your profile.</p>
+                  </div>
+                  <Switch id="contact_info_visible" checked={profileData.contact_info_visible} onCheckedChange={(checked) => handleInputChange("contact_info_visible", checked)} />
+                </div>
+                <div className="flex items-center justify-between p-3 rounded-md border">
+                  <div>
+                    <Label htmlFor="rate_card_visible">Rate Card Visibility</Label>
+                    <p className="text-sm text-gray-500">Show your rates on your profile.</p>
+                  </div>
+                  <Switch id="rate_card_visible" checked={profileData.rate_card_visible} onCheckedChange={(checked) => handleInputChange("rate_card_visible", checked)} />
                 </div>
               </CardContent>
             </Card>
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center"><Settings className="h-5 w-5 mr-2" />Change Password</CardTitle>
-                <CardDescription>Update your password to keep your account secure</CardDescription>
+                <CardTitle>Account Settings</CardTitle>
+                <CardDescription>Manage your account credentials and actions.</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <form onSubmit={handlePasswordUpdate} className="space-y-4">
-                  {passwordError && <Alert variant="destructive"><AlertDescription>{passwordError}</AlertDescription></Alert>}
-                  {passwordSuccess && <Alert><CheckCircle className="h-4 w-4" /><AlertDescription>Password updated successfully!</AlertDescription></Alert>}
-                  <div className="space-y-2">
+                  <div className="relative">
                     <Label htmlFor="new_password">New Password</Label>
-                    <div className="relative">
-                      <Input id="new_password" type={showPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Enter new password" className="pr-10" />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
+                    <Input id="new_password" type={showPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Enter new password" />
+                    <Button type="button" variant="ghost" size="icon" className="absolute bottom-1 right-1 h-7 w-7" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
                   </div>
-                  <div className="space-y-2">
+                  <div>
                     <Label htmlFor="confirm_password">Confirm New Password</Label>
                     <Input id="confirm_password" type={showPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm new password" />
                   </div>
-                  <Button type="submit" className="bg-red-700 hover:bg-red-800" disabled={passwordLoading}>{passwordLoading ? "Updating..." : "Update Password"}</Button>
+                  {passwordError && <p className="text-sm text-red-500">{passwordError}</p>}
+                  {passwordSuccess && <p className="text-sm text-green-500">Password updated successfully!</p>}
+                  <Button type="submit" disabled={passwordLoading}>{passwordLoading ? "Updating..." : "Update Password"}</Button>
                 </form>
+                <div className="pt-4 border-t">
+                  <Button variant="destructive" onClick={handleSignOut}><LogOut className="h-4 w-4 mr-2" /> Sign Out</Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -750,38 +649,45 @@ return (
           <TabsContent value="billing" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center"><CreditCard className="h-5 w-5 mr-2" />Subscription Details</CardTitle>
+                <CardTitle>Subscription Details</CardTitle>
+                <CardDescription>Manage your subscription plan and billing information.</CardDescription>
               </CardHeader>
               <CardContent>
                 {isSubscribed ? (
-                  <>
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-4 bg-green-50 border border-green-200 rounded-lg">
                       <div>
-                        <Badge className="bg-green-100 text-green-800 mb-2"><CheckCircle className="h-3 w-3 mr-1" />Active</Badge>
-                        <p className="text-lg font-semibold">Pro Crew Member</p>
-                        <p className="text-sm text-gray-600">Full access to all features</p>
+                        <p className="font-semibold text-green-800">Pro Plan Active</p>
+                        <p className="text-sm text-green-600">Your subscription renews on {new Date(subscription.stripe_current_period_end!).toLocaleDateString()}.</p>
                       </div>
-                      <div className="text-left sm:text-right">
-                        <p className="text-2xl font-bold">R60</p>
-                        <p className="text-sm text-gray-600">per month</p>
-                        <p className="text-sm text-gray-500">Next billing: {subscription?.stripe_current_period_end ? new Date(subscription.stripe_current_period_end).toLocaleDateString() : 'N/A'}</p>
-                      </div>
+                      <CheckCircle className="h-6 w-6 text-green-600" />
                     </div>
-                    <div className="border-t pt-6 mt-6">
-                      <Button onClick={handleContactSupport} variant="outline" className="w-full bg-transparent"><CreditCard className="h-4 w-4 mr-2" />Manage Billing & Payment</Button>
-                      <p className="text-xs text-gray-500 text-center mt-2">Contact support to update payment methods or cancel subscription</p>
-                    </div>
-                  </>
+                    <Button onClick={handleManageBilling}>
+                      <CreditCard className="h-4 w-4 mr-2" /> Manage Billing
+                    </Button>
+                  </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <Crown className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No Active Subscription</h3>
-                    <p className="text-gray-600 mb-6">Upgrade to Pro to unlock all features and make your profile visible to clients.</p>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-4 bg-gray-100 border rounded-lg">
+                      <div>
+                        <p className="font-semibold text-gray-800">No Active Subscription</p>
+                        <p className="text-sm text-gray-600">Upgrade to a Pro plan to unlock all features.</p>
+                      </div>
+                      <XCircle className="h-6 w-6 text-gray-500" />
+                    </div>
                     <Button onClick={() => (window.location.href = "https://buy.stripe.com/test_28o5lq0Hy9Hn6nS4gg")} className="bg-red-700 hover:bg-red-800">
-                      <Crown className="h-4 w-4 mr-2" />Subscribe to Pro - R60/month
+                      <Crown className="h-4 w-4 mr-2" /> Upgrade to Pro
                     </Button>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Need Help?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" onClick={handleContactSupport}>Contact Support</Button>
               </CardContent>
             </Card>
           </TabsContent>

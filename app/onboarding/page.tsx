@@ -9,6 +9,9 @@ import { Progress } from "@/components/ui/progress"
 import { Camera, Search, Building2, ArrowRight, ArrowLeft, Check } from 'lucide-react'
 import Image from "next/image"
 import Link from "next/link"
+import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
+import { getCurrentUser } from "@/lib/auth"
 
 // Onboarding steps
 import WelcomePage from "@/components/onboarding/welcome-page"
@@ -61,8 +64,8 @@ export interface OnboardingData {
 
 const TOTAL_STEPS = 8
 
-export default function OnboardingFlow() {
-  const [currentStep, setCurrentStep] = useState(1)
+function OnboardingFlow({ initialStep }: { initialStep: number }) {
+  const [currentStep, setCurrentStep] = useState(initialStep)
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
     userType: null,
     email: '',
@@ -217,10 +220,10 @@ export default function OnboardingFlow() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1A1A1A] via-[#2B2D42] to-[#1A1A1A] text-white overflow-x-hidden">
+    <div className="bg-gray-50 text-gray-900 min-h-screen overflow-x-hidden">
       {/* Progress Bar */}
       {currentStep < 8 && (
-        <div className="sticky top-0 z-50 bg-black/20 backdrop-blur-sm border-b border-white/10">
+        <div className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
@@ -233,11 +236,11 @@ export default function OnboardingFlow() {
                 />
                 <span className="text-sm font-medium">SnapScout</span>
               </div>
-              <div className="text-sm text-gray-300">
+              <div className="text-sm text-gray-600">
                 Step {currentStep} of {TOTAL_STEPS}
               </div>
             </div>
-            <div className="w-full bg-[#2B2D42]/30 rounded-full h-1">
+            <div className="w-full bg-gray-200 rounded-full h-1">
               <div
                 className="bg-gradient-to-r from-[#E63946] to-[#FFCC00] h-1 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${(currentStep / TOTAL_STEPS) * 100}%` }}
@@ -267,12 +270,12 @@ export default function OnboardingFlow() {
 
       {/* Navigation (for steps 2-7) */}
       {currentStep > 1 && currentStep < 8 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-black/20 backdrop-blur-sm border-t border-white/10 p-4 z-50">
+        <div className="bg-white/80 backdrop-blur-sm border-t fixed bottom-0 left-0 right-0 p-4 z-50">
           <div className="container mx-auto flex justify-between items-center">
             <Button
               variant="ghost"
               onClick={prevStep}
-              className="text-white hover:bg-white/10"
+              className="text-gray-700 hover:bg-gray-100"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
@@ -288,7 +291,7 @@ export default function OnboardingFlow() {
                       ? 'bg-[#E63946] w-6'
                       : i + 1 < currentStep
                       ? 'bg-[#8BC34A]'
-                      : 'bg-white/20'
+                      : 'bg-gray-300'
                   }`}
                 />
               ))}
@@ -298,6 +301,21 @@ export default function OnboardingFlow() {
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+export default async function OnboardingPage() {
+  const user = await getCurrentUser()
+  if (!user) {
+    redirect("/auth/login")
+  }
+
+  const onboardingStep = cookies().get("onboarding_step")?.value || "1"
+
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
+      <OnboardingFlow initialStep={parseInt(onboardingStep)} />
     </div>
   )
 }
