@@ -16,9 +16,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
-import { citiesByProvince } from "@/lib/locations"
+import { locations } from "@/lib/locations"
 
-export default function LocationPreferences() {
+export function LocationPreferences() {
   const { nextStep, prevStep, currentStep, setLocationPreferences } =
     useOnboarding()
   const [province, setProvince] = useState("")
@@ -30,7 +30,7 @@ export default function LocationPreferences() {
     nextStep()
   }
 
-  const citiesInProvince = province ? citiesByProvince[province] : []
+  const citiesInProvince = province ? locations[province] : []
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4 text-foreground">
@@ -64,7 +64,7 @@ export default function LocationPreferences() {
                   <SelectValue placeholder="Select a province" />
                 </SelectTrigger>
                 <SelectContent className="bg-card text-foreground">
-                  {Object.keys(citiesByProvince).map((prov) => (
+                  {Object.keys(locations).map((prov) => (
                     <SelectItem key={prov} value={prov}>
                       {prov}
                     </SelectItem>
