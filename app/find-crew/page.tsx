@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Search, MapPin, Calendar, User, Filter, X } from "lucide-react"
+import { Search, MapPin, Calendar, User, Filter, X } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
@@ -356,48 +356,6 @@ export default function FindFilmCrew() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2">
-              <Image
-                src="/images/snapscout-new-logo.jpeg"
-                alt="SnapScout Logo: People Create Utility Tools"
-                width={48}
-                height={48}
-                className="h-12 w-12 rounded-full bg-white border border-gray-200"
-              />
-              <div>
-                <span className="text-xl font-bold text-gray-900">SnapScout</span>
-                <p className="text-xs text-gray-500 -mt-1">Your Local Companion</p>
-              </div>
-            </Link>
-
-            <nav className="flex items-center">
-              <div className="flex bg-gray-100 rounded-lg p-1">
-                <Link
-                  href="/find-crew"
-                  className="px-4 py-2 rounded-md text-sm font-medium bg-white text-red-700 shadow-sm"
-                >
-                  Find Crew
-                </Link>
-                <Link
-                  href="/studios"
-                  className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-red-700 transition-colors"
-                >
-                  Studios
-                </Link>
-                <Link
-                  href="/stores"
-                  className="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:text-red-700 transition-colors"
-                >
-                  Stores
-                </Link>
-              </div>
-            </nav>
-          </div>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <section className="py-16 bg-gray-50">

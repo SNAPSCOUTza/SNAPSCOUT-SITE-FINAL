@@ -6,24 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { InstagramFeed } from "@/components/ui/instagram-feed"
-import {
-  User,
-  MapPin,
-  Mail,
-  Instagram,
-  Linkedin,
-  Youtube,
-  Globe,
-  Camera,
-  MessageCircle,
-  ExternalLink,
-  Star,
-  Calendar,
-  DollarSign,
-  CheckCircle,
-  Heart,
-  Share2,
-} from "lucide-react"
+import { User, MapPin, Mail, Instagram, Linkedin, Youtube, Globe, Camera, MessageCircle, ExternalLink, Star, Calendar, DollarSign, CheckCircle, Heart, Share2 } from 'lucide-react'
 import Link from "next/link"
 import Image from "next/image"
 import { supabase } from "@/lib/auth"
@@ -217,45 +200,6 @@ export default function CrewProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-50">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Link href="/" className="flex items-center space-x-2">
-            <Image
-              src="/images/snapscout-new-logo.jpeg"
-              alt="SnapScout Logo"
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-full"
-            />
-            <div className="hidden sm:block">
-              <span className="text-xl font-bold text-gray-900">SnapScout</span>
-              <p className="text-xs text-gray-500 -mt-1">Crew Profile</p>
-            </div>
-          </Link>
-
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <Button variant="ghost" size="sm" onClick={handleShare}>
-              <Share2 className="h-4 w-4" />
-              <span className="hidden sm:inline ml-1">Share</span>
-            </Button>
-            <Button variant="ghost" size="sm" onClick={handleFavorite} className={isFavorited ? "text-red-600" : ""}>
-              <Heart className={`h-4 w-4 ${isFavorited ? "fill-current" : ""}`} />
-              <span className="hidden sm:inline ml-1">{isFavorited ? "Favorited" : "Favorite"}</span>
-            </Button>
-            {isOwner && (
-              <Button asChild variant="outline" size="sm">
-                <Link href="/dashboard">
-                  <User className="h-4 w-4 mr-1" />
-                  <span className="hidden sm:inline">Dashboard</span>
-                </Link>
-              </Button>
-            )}
-            <Link href="/find-crew" className="text-red-700 hover:text-red-800 text-sm">
-              Browse More
-            </Link>
-          </div>
-        </div>
-      </header>
 
       {/* Profile Content */}
       <div className="container mx-auto px-4 py-6 sm:py-8">
