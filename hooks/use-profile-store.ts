@@ -1,84 +1,82 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
 
-export interface SocialLinks {
-  website: string
-  instagram: string
-  twitter: string
-  linkedin: string
-  youtube: string
-  tiktok: string
+// This interface is aligned with the main UserProfile interface
+// to ensure data compatibility between demo and authenticated states.
+export interface DemoProfileState {
+  display_name: string
+  full_name: string
+  profile_picture: string // Base64 string for local storage
+  bio: string
+  province: string
+  city: string
+  department: string
+  profession: string
+  roles: string[]
+  instagram_url: string
+  linkedin_url: string
+  youtube_vimeo: string
+  website_url: string
+  portfolio_images: string[] // Array of Base64 strings
 }
 
-export interface ProfileState {
-  fullName: string
-  profession: string
-  location: string
-  availability: string
-  pricing: string
-  bio: string
-  profileImageUrl: string
-  skills: string[]
-  socialLinks: SocialLinks
-  portfolioImages: string[]
-  setProfileState: (newState: Partial<ProfileState>) => void
-  addSkill: (skill: string) => void
-  removeSkill: (skill: string) => void
-  addPortfolioImage: (imageUrl: string) => void
+interface ProfileStore {
+  profile: DemoProfileState
+  setProfileField: <K extends keyof DemoProfileState>(field: K, value: DemoProfileState[K]) => void
+  setProfile: (profile: Partial<DemoProfileState>) => void
+  addPortfolioImage: (image: string) => void
   removePortfolioImage: (index: number) => void
   resetProfile: () => void
 }
 
-const initialState = {
-  fullName: "Alex Doe",
-  profession: "Photographer & Videographer",
-  location: "Cape Town, South Africa",
-  availability: "Available for new projects",
-  pricing: "Starting from $500/day",
-  bio: "Passionate visual storyteller with over 5 years of experience capturing moments that matter. Specializing in commercial and event photography.",
-  profileImageUrl: "",
-  skills: ["Photography", "Videography", "Color Grading", "Drone Operation"],
-  socialLinks: {
-    website: "",
-    instagram: "",
-    twitter: "",
-    linkedin: "",
-    youtube: "",
-    tiktok: "",
-  },
-  portfolioImages: [],
+const initialState: DemoProfileState = {
+  display_name: "Your Name",
+  full_name: "",
+  profile_picture: "",
+  bio: "A short bio about your skills, experience, and what makes you unique.",
+  province: "",
+  city: "",
+  department: "",
+  profession: "Photographer",
+  roles: ["Photographer"],
+  instagram_url: "",
+  linkedin_url: "",
+  youtube_vimeo: "",
+  website_url: "",
+  portfolio_images: [],
 }
 
-export const useProfileStore = create<ProfileState>()(
+export const useProfileStore = create<ProfileStore>()(
   persist(
-    (set, get) => ({
-      ...initialState,
-      setProfileState: (newState) => set(newState),
-      addSkill: (skill) => {
-        if (skill && !get().skills.includes(skill)) {
-          set((state) => ({ skills: [...state.skills, skill] }))
-        }
-      },
-      removeSkill: (skill) => {
+    (set) => ({
+      profile: initialState,
+      setProfileField: (field, value) =>
         set((state) => ({
-          skills: state.skills.filter((s) => s !== skill),
-        }))
-      },
-      addPortfolioImage: (imageUrl) => {
+          profile: { ...state.profile, [field]: value },
+        })),
+      setProfile: (newProfileData) =>
         set((state) => ({
-          portfolioImages: [...state.portfolioImages, imageUrl],
-        }))
-      },
-      removePortfolioImage: (index) => {
+          profile: { ...state.profile, ...newProfileData },
+        })),
+      addPortfolioImage: (image) =>
         set((state) => ({
-          portfolioImages: state.portfolioImages.filter((_, i) => i !== index),
-        }))
-      },
-      resetProfile: () => set(initialState),
+          profile: {
+            ...state.profile,
+            portfolio_images: [...state.profile.portfolio_images, image],
+          },
+        })),
+      removePortfolioImage: (index) =>
+        set((state) => ({
+          profile: {
+            ...state.profile,
+            portfolio_images: state.profile.portfolio_images.filter((_, i) => i !== index),
+          },
+        })),
+      resetProfile: () => set({ profile: initialState }),
     }),
     {
-      name: "snapscout-demo-profile", // name of the item in the storage (must be unique)
-      storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
+      name: "snapscout-demo-profile-v2", // Renamed to avoid conflicts with old structure
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 )

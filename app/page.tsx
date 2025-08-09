@@ -61,7 +61,7 @@ export default function SnapScoutLanding() {
                     Preview
                   </PreviewButtonWithRedHover>
                   <Button asChild variant="outline" className="h-11 px-6 bg-transparent">
-                    <Link href="/onboarding">
+                    <Link href="/dashboard">
                       <UserPlus className="h-4 w-4 mr-2" />
                       Create Your Profile
                     </Link>
@@ -567,7 +567,7 @@ export default function SnapScoutLanding() {
                       </CardContent>
                       <CardFooter>
                         <Button asChild className="w-full bg-red-700 hover:bg-red-800">
-                          <Link href="/onboarding">Create Your Profile</Link>
+                          <Link href="/dashboard">Create Your Profile</Link>
                         </Button>
                       </CardFooter>
                     </Card>
@@ -639,7 +639,7 @@ export default function SnapScoutLanding() {
 
               <div className="mt-8">
                 <Button asChild size="lg" className="bg-white text-red-700 hover:bg-gray-100">
-                  <Link href="/onboarding">
+                  <Link href="/dashboard">
                     <UserPlus className="mr-2 h-5 w-5" />
                     Create Your Profile - R60/month
                   </Link>
