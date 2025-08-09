@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { useOnboarding } from "./onboarding-provider"
 
 // Onboarding steps
 import WelcomePage from "@/components/onboarding/welcome-page"
@@ -14,10 +14,10 @@ import SpecializationSelection from "@/components/onboarding/specialization-sele
 import LocationPreferences from "@/components/onboarding/location-preferences"
 import ProfileCompletion from "@/components/onboarding/profile-completion"
 import WelcomeToDashboard from "@/components/onboarding/welcome-to-dashboard"
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from "lucide-react"
 
 export interface OnboardingData {
-  userType: 'creator' | 'client' | 'studio' | null
+  userType: "creator" | "client" | "studio" | null
   email: string
   password: string
   displayName: string
@@ -55,97 +55,63 @@ export interface OnboardingData {
 const TOTAL_STEPS = 8
 
 export default function OnboardingFlow() {
-  const [currentStep, setCurrentStep] = useState(1)
-  const [onboardingData, setOnboardingData] = useState<OnboardingData>({
-    userType: null,
-    email: '',
-    password: '',
-    displayName: '',
-    location: '',
-    bio: '',
-    profilePicture: '',
-    specializations: [],
-    locationPreferences: [],
-    willingToTravel: false,
-    socialLinks: {
-      instagram: '',
-      youtube: '',
-      tiktok: '',
-      website: ''
-    },
-    imdbProfile: '',
-    linkedin: '',
-    youtube_vimeo: '',
-    fullName: '',
-    city: '',
-    provinceCountry: '',
-    department: '',
-    roles: [],
-    experienceLevel: '',
-    yearsExperience: '',
-    dailyRate: '',
-    hourlyRate: '',
-    projectRate: '',
-    languagesSpoken: [],
-    servicesOffered: [],
-    gearOwned: [],
-    specialSkills: [],
-  })
-
-  useEffect(() => {
-    const savedData = localStorage.getItem('snapscout-onboarding')
-    if (savedData) {
-      const parsed = JSON.parse(savedData)
-      setOnboardingData(parsed.data)
-      setCurrentStep(parsed.step)
-    }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem('snapscout-onboarding', JSON.stringify({
-      data: onboardingData,
-      step: currentStep
-    }))
-  }, [onboardingData, currentStep])
-
-  const updateOnboardingData = (updates: Partial<OnboardingData>) => {
-    setOnboardingData(prev => ({ ...prev, ...updates }))
-  }
-
-  const nextStep = () => {
-    if (currentStep < TOTAL_STEPS) {
-      setCurrentStep(prev => prev + 1)
-    }
-  }
-
-  const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1)
-    }
-  }
-
-  const goToStep = (step: number) => {
-    setCurrentStep(step)
-  }
+  const { currentStep, onboardingData, updateOnboardingData, nextStep, prevStep, goToStep } = useOnboarding()
 
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
         return <WelcomePage onNext={nextStep} data={onboardingData} updateData={updateOnboardingData} />
       case 2:
-        return <AccountTypeSelection onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
+        return (
+          <AccountTypeSelection
+            onNext={nextStep}
+            onPrev={prevStep}
+            data={onboardingData}
+            updateData={updateOnboardingData}
+          />
+        )
       case 3:
-        return <AccountCreation onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
+        return (
+          <AccountCreation
+            onNext={nextStep}
+            onPrev={prevStep}
+            data={onboardingData}
+            updateData={updateOnboardingData}
+          />
+        )
       case 4:
-        return <ProfileBasics onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
+        return (
+          <ProfileBasics onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
+        )
       case 5:
-        return <SpecializationSelection onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
+        return (
+          <SpecializationSelection
+            onNext={nextStep}
+            onPrev={prevStep}
+            data={onboardingData}
+            updateData={updateOnboardingData}
+          />
+        )
       case 6:
-        return <LocationPreferences onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
+        return (
+          <LocationPreferences
+            onNext={nextStep}
+            onPrev={prevStep}
+            data={onboardingData}
+            updateData={updateOnboardingData}
+          />
+        )
       case 7:
-        return <ProfileCompletion onNext={nextStep} onPrev={prevStep} data={onboardingData} updateData={updateOnboardingData} />
+        return (
+          <ProfileCompletion
+            onNext={nextStep}
+            onPrev={prevStep}
+            data={onboardingData}
+            updateData={updateOnboardingData}
+          />
+        )
       case 8:
-        return <WelcomeToDashboard data={onboardingData} onComplete={() => localStorage.removeItem('snapscout-onboarding')} />
+        return <WelcomeToDashboard data={onboardingData} />
       default:
         return null
     }
@@ -204,32 +170,22 @@ export default function OnboardingFlow() {
       {currentStep > 1 && currentStep < 8 && (
         <div className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-gray-200 p-4 z-50">
           <div className="container mx-auto flex justify-between items-center">
-            <Button
-              variant="ghost"
-              onClick={prevStep}
-              className="text-gray-700 hover:bg-gray-100"
-            >
+            <Button variant="ghost" onClick={prevStep} className="text-gray-700 hover:bg-gray-100">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-            
             <div className="flex space-x-2">
               {Array.from({ length: TOTAL_STEPS }, (_, i) => (
                 <button
                   key={i}
                   onClick={() => goToStep(i + 1)}
                   className={`w-2 h-2 rounded-full transition-all ${
-                    i + 1 === currentStep
-                      ? 'bg-primary w-6'
-                      : i + 1 < currentStep
-                      ? 'bg-green-500'
-                      : 'bg-gray-300'
+                    i + 1 === currentStep ? "bg-primary w-6" : i + 1 < currentStep ? "bg-green-500" : "bg-gray-300"
                   }`}
                   aria-label={`Go to step ${i + 1}`}
                 />
               ))}
             </div>
-
             <div className="w-24" /> {/* Spacer for centering */}
           </div>
         </div>

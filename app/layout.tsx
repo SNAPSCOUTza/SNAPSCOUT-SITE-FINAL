@@ -1,26 +1,29 @@
+import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from 'next/font/google'
+import { Inter } from "next/font/google"
 import "./globals.css"
 import Header from "@/components/layout/header"
+import SiteWrapper from "@/components/layout/site-wrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: {
     default: "SnapScout - Your Local Creative Companion",
-    template: "%s | SnapScout"
+    template: "%s | SnapScout",
   },
-  description: "Connect, Create, and Get Booked in South Africa's Premier Creative Network. Find photographers, videographers, studios, and equipment rental services.",
+  description:
+    "Connect, Create, and Get Booked in South Africa's Premier Creative Network. Find photographers, videographers, studios, and equipment rental services.",
   keywords: [
     "photography",
-    "videography", 
+    "videography",
     "creative services",
     "South Africa",
     "film crew",
     "studios",
     "equipment rental",
     "photographers",
-    "videographers"
+    "videographers",
   ],
   authors: [{ name: "SnapScout Team" }],
   creator: "SnapScout",
@@ -82,8 +85,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        {children}
+        <SiteWrapper>
+          <Header />
+          {children}
+        </SiteWrapper>
       </body>
     </html>
   )

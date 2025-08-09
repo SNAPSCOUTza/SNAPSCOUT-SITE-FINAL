@@ -3,10 +3,24 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Shield, Star, Search, MessageCircle, CheckCircle, ArrowRight, Instagram, Linkedin, Heart, Eye, Award, Youtube, UserPlus } from 'lucide-react'
+import {
+  Shield,
+  Star,
+  Search,
+  MessageCircle,
+  CheckCircle,
+  ArrowRight,
+  Instagram,
+  Linkedin,
+  Heart,
+  Eye,
+  Award,
+  Youtube,
+  UserPlus,
+} from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { Facebook } from 'lucide-react'
+import { Facebook } from "lucide-react"
 import { BackgroundBeams } from "@/components/ui/background-beams"
 import { PreviewButtonWithRedHover } from "@/components/ui/preview-button-with-red-hover"
 import { motion } from "framer-motion"
@@ -21,44 +35,25 @@ export default function SnapScoutLanding() {
           <div className="relative z-10">
             <div className="container mx-auto px-4">
               <div className="mx-auto max-w-4xl text-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
+                <motion.div>
                   <Badge variant="secondary" className="mb-4 bg-red-50 text-red-700">
                     ✨ Your Local Companion
                   </Badge>
                 </motion.div>
 
-                <motion.h1
-                  className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                >
+                <motion.h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
                   Connecting you with the people and tools to give you the utility to create
                   <Badge variant="secondary" className="ml-4 bg-yellow-100 text-yellow-800 text-sm">
                     Coming Soon
                   </Badge>
                 </motion.h1>
 
-                <motion.p
-                  className="mt-6 text-lg leading-8 text-gray-700 max-w-2xl mx-auto"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                >
+                <motion.p className="mt-6 text-lg leading-8 text-gray-700 max-w-2xl mx-auto">
                   Discover talented local photographers, videographers, and content creators in your area based on
                   portfolio quality. Your local companion for finding the perfect creative partner
                 </motion.p>
 
-                <motion.div
-                  className="mt-10 flex items-center justify-center gap-x-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.8 }}
-                >
+                <motion.div className="mt-10 flex items-center justify-center gap-x-6">
                   <PreviewButtonWithRedHover
                     onClick={() => window.open("https://www.youtube.com/watch?v=cpQKutRoglo", "_blank")}
                     className="h-11 px-6"
@@ -73,24 +68,14 @@ export default function SnapScoutLanding() {
                   </Button>
                 </motion.div>
 
-                <motion.p
-                  className="mt-4 text-sm text-gray-600"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 1.0 }}
-                >
+                <motion.p className="mt-4 text-sm text-gray-600">
                   Launching Soon • Be the first to know • Join our waitlist
                 </motion.p>
               </div>
             </div>
 
             {/* Trust Indicators */}
-            <motion.div
-              className="mt-16 container mx-auto px-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.2 }}
-            >
+            <motion.div className="mt-16 container mx-auto px-4">
               <div className="flex items-center justify-center space-x-8 text-gray-700">
                 <div className="flex items-center space-x-2">
                   <Shield className="h-5 w-5" />
@@ -119,9 +104,7 @@ export default function SnapScoutLanding() {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Discover Amazing Creators
-              </h2>
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Discover Amazing Creators</h2>
               <p className="mt-4 text-lg text-gray-600">
                 Browse portfolios from talented creatives across different specialties
               </p>
@@ -321,8 +304,8 @@ export default function SnapScoutLanding() {
                       </div>
                       <h3 className="text-xl font-semibold mb-4">1. Create Your Profile</h3>
                       <p className="text-gray-600">
-                        Sign up for R60/month and create your professional profile with credits, gear, rates, and
-                        social links.
+                        Sign up for R60/month and create your professional profile with credits, gear, rates, and social
+                        links.
                       </p>
                     </>
                   )}
@@ -333,8 +316,8 @@ export default function SnapScoutLanding() {
                       </div>
                       <h3 className="text-xl font-semibold mb-4">2. Get Discovered</h3>
                       <p className="text-gray-600">
-                        Clients find you through our directory, filtering by department, location, experience level,
-                        and availability.
+                        Clients find you through our directory, filtering by department, location, experience level, and
+                        availability.
                       </p>
                     </>
                   )}
@@ -484,374 +467,374 @@ export default function SnapScoutLanding() {
           </div>
         </section>
 
-          {/* Pricing Section */}
-          <section id="pricing" className="bg-gray-50 py-24 sm:py-32">
-            <div className="container mx-auto px-4">
-              <div className="mx-auto max-w-2xl text-center mb-16">
-                <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Simple Monthly Plans</h2>
-                <p className="mt-4 text-lg text-gray-600">
-                  Choose the plan that fits your creative business. Clients always browse and book for free.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                {/* Pricing Cards */}
-                {[...Array(3)].map((_, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: index * 0.15 }}
-                    viewport={{ once: true }}
-                  >
-                    {index === 0 && (
-                      <Card className="bg-white border-2 border-gray-200">
-                        <CardHeader className="text-center">
-                          <CardTitle className="text-2xl">Clients</CardTitle>
-                          <CardDescription>Find and book amazing creators</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <div className="text-center">
-                            <span className="text-4xl font-bold text-green-600">Free</span>
-                            <p className="text-gray-600">Always free to use</p>
-                          </div>
-                          <div className="space-y-3">
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Browse unlimited profiles</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>See rates, gear, and credits</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Contact crew directly</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Filter by location & availability</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>24/7 customer support</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                        <CardFooter>
-                          <Button className="w-full bg-red-700 hover:bg-red-800" disabled>
-                            Launching Soon
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    )}
-                    {index === 1 && (
-                      <Card className="bg-white border-2 border-red-200 relative">
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                          <Badge className="bg-red-700">Most Popular</Badge>
-                        </div>
-                        <CardHeader className="text-center">
-                          <CardTitle className="text-2xl">Crew Members</CardTitle>
-                          <CardDescription>Individual film & content professionals</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <div className="text-center">
-                            <span className="text-4xl font-bold">R60</span>
-                            <p className="text-gray-600">/month</p>
-                          </div>
-                          <div className="space-y-3">
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Professional profile with rates</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Showcase credits & gear owned</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Link social media & IMDB</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Get discovered by clients</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Priority support</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                        <CardFooter>
-                          <Button asChild className="w-full bg-red-700 hover:bg-red-800">
-                            <Link href="/onboarding">Create Your Profile</Link>
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    )}
-                    {index === 2 && (
-                      <Card className="bg-white border-2 border-gray-200">
-                        <CardHeader className="text-center">
-                          <CardTitle className="text-2xl">Studios</CardTitle>
-                          <CardDescription>Production companies & creative agencies</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <div className="text-center">
-                            <span className="text-4xl font-bold">R300</span>
-                            <p className="text-gray-600">/month</p>
-                          </div>
-                          <div className="space-y-3">
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Team profile management</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Multiple crew profiles</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Advanced project tools</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Studio branding options</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <CheckCircle className="h-5 w-5 text-green-600" />
-                              <span>Dedicated account manager</span>
-                            </div>
-                          </div>
-                        </CardContent>
-                        <CardFooter>
-                          <Button className="w-full bg-transparent" variant="outline" disabled>
-                            Notify Me
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
+        {/* Pricing Section */}
+        <section id="pricing" className="bg-gray-50 py-24 sm:py-32">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-2xl text-center mb-16">
+              <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Simple Monthly Plans</h2>
+              <p className="mt-4 text-lg text-gray-600">
+                Choose the plan that fits your creative business. Clients always browse and book for free.
+              </p>
             </div>
-          </section>
 
-          {/* Final CTA Section */}
-          <section className="bg-red-700 py-24 sm:py-32">
-            <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {/* Pricing Cards */}
+              {[...Array(3)].map((_, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: index * 0.15 }}
+                  viewport={{ once: true }}
+                >
+                  {index === 0 && (
+                    <Card className="bg-white border-2 border-gray-200">
+                      <CardHeader className="text-center">
+                        <CardTitle className="text-2xl">Clients</CardTitle>
+                        <CardDescription>Find and book amazing creators</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="text-center">
+                          <span className="text-4xl font-bold text-green-600">Free</span>
+                          <p className="text-gray-600">Always free to use</p>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Browse unlimited profiles</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>See rates, gear, and credits</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Contact crew directly</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Filter by location & availability</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>24/7 customer support</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                      <CardFooter>
+                        <Button className="w-full bg-red-700 hover:bg-red-800" disabled>
+                          Launching Soon
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  )}
+                  {index === 1 && (
+                    <Card className="bg-white border-2 border-red-200 relative">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <Badge className="bg-red-700">Most Popular</Badge>
+                      </div>
+                      <CardHeader className="text-center">
+                        <CardTitle className="text-2xl">Crew Members</CardTitle>
+                        <CardDescription>Individual film & content professionals</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="text-center">
+                          <span className="text-4xl font-bold">R60</span>
+                          <p className="text-gray-600">/month</p>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Professional profile with rates</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Showcase credits & gear owned</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Link social media & IMDB</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Get discovered by clients</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Priority support</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                      <CardFooter>
+                        <Button asChild className="w-full bg-red-700 hover:bg-red-800">
+                          <Link href="/onboarding">Create Your Profile</Link>
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  )}
+                  {index === 2 && (
+                    <Card className="bg-white border-2 border-gray-200">
+                      <CardHeader className="text-center">
+                        <CardTitle className="text-2xl">Studios</CardTitle>
+                        <CardDescription>Production companies & creative agencies</CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="text-center">
+                          <span className="text-4xl font-bold">R300</span>
+                          <p className="text-gray-600">/month</p>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Team profile management</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Multiple crew profiles</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Advanced project tools</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Studio branding options</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Dedicated account manager</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                      <CardFooter>
+                        <Button className="w-full bg-transparent" variant="outline" disabled>
+                          Notify Me
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA Section */}
+        <section className="bg-red-700 py-24 sm:py-32">
+          <div className="container mx-auto px-4">
+            <motion.div
+              className="mx-auto max-w-2xl text-center"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                Ready to Get Discovered by Your Next Client?
+              </h2>
+              <p className="mt-4 text-lg text-red-50">
+                Join SnapScout and create your professional profile. Show your rates, credits, gear, and get booked
+                directly.
+              </p>
+
+              <div className="mt-8">
+                <Button asChild size="lg" className="bg-white text-red-700 hover:bg-gray-100">
+                  <Link href="/onboarding">
+                    <UserPlus className="mr-2 h-5 w-5" />
+                    Create Your Profile - R60/month
+                  </Link>
+                </Button>
+              </div>
+
+              <p className="mt-4 text-sm text-red-100">Coming Soon • Be the first to experience SnapScout</p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-900 text-white">
+          <div className="container mx-auto px-4 py-16">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
               <motion.div
-                className="mx-auto max-w-2xl text-center"
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                  Ready to Get Discovered by Your Next Client?
-                </h2>
-                <p className="mt-4 text-lg text-red-50">
-                  Join SnapScout and create your professional profile. Show your rates, credits, gear, and get booked
-                  directly.
-                </p>
-
-                <div className="mt-8">
-                  <Button asChild size="lg" className="bg-white text-red-700 hover:bg-gray-100">
-                    <Link href="/onboarding">
-                      <UserPlus className="mr-2 h-5 w-5" />
-                      Create Your Profile - R60/month
+                <div className="lg:col-span-1">
+                  <div className="flex items-center space-x-2">
+                    <Image
+                      src="/images/snapscout-new-logo.jpeg"
+                      alt="SnapScout Logo: People Create Utility Tools"
+                      width={48}
+                      height={48}
+                      className="h-12 w-12 rounded-full bg-white border border-gray-700"
+                    />
+                    <div>
+                      <span className="text-xl font-bold">SnapScout</span>
+                      <p className="text-xs text-gray-400">Your Local Companion</p>
+                    </div>
+                  </div>
+                  <p className="mt-4 text-gray-400">
+                    Your local companion for connecting with talented creators based on professional credentials, not
+                    follower count.
+                  </p>
+                  <div className="mt-6 flex space-x-4">
+                    <Link
+                      href="https://www.instagram.com/snapscout_int/"
+                      className="text-gray-400 hover:text-white transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Instagram className="h-5 w-5" />
                     </Link>
-                  </Button>
+                    <Link
+                      href="https://www.linkedin.com/company/snapscout-int-za/"
+                      className="text-gray-400 hover:text-white transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Linkedin className="h-5 w-5" />
+                    </Link>
+                    <Link
+                      href="https://www.youtube.com/watch?v=cpQKutRoglo"
+                      className="text-gray-400 hover:text-white transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Youtube className="h-5 w-5" />
+                    </Link>
+                    <Link
+                      href="https://www.facebook.com/people/SnapScoutZA/61556883658539/?mibextid=kFxxJD&rdid=N2Juv3pTTWNI7iWh&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2FwafakqCvNNiLoHnQ%2F%3Fmibextid%3DkFxxJD"
+                      className="text-gray-400 hover:text-white transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Facebook className="h-5 w-5" />
+                    </Link>
+                  </div>
                 </div>
+              </motion.div>
 
-                <p className="mt-4 text-sm text-red-100">Coming Soon • Be the first to experience SnapScout</p>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider">For Clients</h3>
+                  <ul className="mt-4 space-y-2">
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Browse Crew
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        How It Works
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Pricing
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Success Stories
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider">For Crew</h3>
+                  <ul className="mt-4 space-y-2">
+                    <li>
+                      <Link href="/auth/signup" className="text-gray-400 hover:text-white transition-colors">
+                        Join SnapScout
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Profile Tips
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Rate Guidelines
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Community
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider">Support</h3>
+                  <ul className="mt-4 space-y-2">
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Help Center
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Contact Us
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Safety & Trust
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                        Terms of Service
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </motion.div>
             </div>
-          </section>
 
-          {/* Footer */}
-          <footer className="bg-gray-900 text-white">
-            <div className="container mx-auto px-4 py-16">
-              <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  viewport={{ once: true }}
-                >
-                  <div className="lg:col-span-1">
-                    <div className="flex items-center space-x-2">
-                      <Image
-                        src="/images/snapscout-new-logo.jpeg"
-                        alt="SnapScout Logo: People Create Utility Tools"
-                        width={48}
-                        height={48}
-                        className="h-12 w-12 rounded-full bg-white border border-gray-700"
-                      />
-                      <div>
-                        <span className="text-xl font-bold">SnapScout</span>
-                        <p className="text-xs text-gray-400">Your Local Companion</p>
-                      </div>
-                    </div>
-                    <p className="mt-4 text-gray-400">
-                      Your local companion for connecting with talented creators based on professional credentials, not
-                      follower count.
-                    </p>
-                    <div className="mt-6 flex space-x-4">
-                      <Link
-                        href="https://www.instagram.com/snapscout_int/"
-                        className="text-gray-400 hover:text-white transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Instagram className="h-5 w-5" />
-                      </Link>
-                      <Link
-                        href="https://www.linkedin.com/company/snapscout-int-za/"
-                        className="text-gray-400 hover:text-white transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Linkedin className="h-5 w-5" />
-                      </Link>
-                      <Link
-                        href="https://www.youtube.com/watch?v=cpQKutRoglo"
-                        className="text-gray-400 hover:text-white transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Youtube className="h-5 w-5" />
-                      </Link>
-                      <Link
-                        href="https://www.facebook.com/people/SnapScoutZA/61556883658539/?mibextid=kFxxJD&rdid=N2Juv3pTTWNI7iWh&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2FwafakqCvNNiLoHnQ%2F%3Fmibextid%3DkFxxJD"
-                        className="text-gray-400 hover:text-white transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Facebook className="h-5 w-5" />
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  viewport={{ once: true }}
-                >
-                  <div>
-                    <h3 className="text-sm font-semibold uppercase tracking-wider">For Clients</h3>
-                    <ul className="mt-4 space-y-2">
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Browse Crew
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          How It Works
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Pricing
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Success Stories
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  viewport={{ once: true }}
-                >
-                  <div>
-                    <h3 className="text-sm font-semibold uppercase tracking-wider">For Crew</h3>
-                    <ul className="mt-4 space-y-2">
-                      <li>
-                        <Link href="/auth/signup" className="text-gray-400 hover:text-white transition-colors">
-                          Join SnapScout
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Profile Tips
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Rate Guidelines
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Community
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  viewport={{ once: true }}
-                >
-                  <div>
-                    <h3 className="text-sm font-semibold uppercase tracking-wider">Support</h3>
-                    <ul className="mt-4 space-y-2">
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Help Center
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Contact Us
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Safety & Trust
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Terms of Service
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                </motion.div>
-              </div>
-
-              <div className="mt-12 border-t border-gray-800 pt-8">
-                <div className="flex flex-col items-center justify-between lg:flex-row">
-                  <p className="text-gray-400">© {new Date().getFullYear()} SnapScout. All rights reserved.</p>
-                  <div className="mt-4 flex space-x-6 lg:mt-0">
-                    <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                      Privacy Policy
-                    </Link>
-                    <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                      Terms of Service
-                    </Link>
-                    <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                      Cookie Policy
-                    </Link>
-                  </div>
+            <div className="mt-12 border-t border-gray-800 pt-8">
+              <div className="flex flex-col items-center justify-between lg:flex-row">
+                <p className="text-gray-400">© {new Date().getFullYear()} SnapScout. All rights reserved.</p>
+                <div className="mt-4 flex space-x-6 lg:mt-0">
+                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Privacy Policy
+                  </Link>
+                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Terms of Service
+                  </Link>
+                  <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+                    Cookie Policy
+                  </Link>
                 </div>
               </div>
             </div>
-          </footer>
-        </div>
+          </div>
+        </footer>
+      </div>
     </>
   )
 }

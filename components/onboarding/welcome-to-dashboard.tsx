@@ -4,68 +4,78 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowRight, CheckCircle, Sparkles, Camera, Search, Building2, Star } from 'lucide-react'
+import { ArrowRight, CheckCircle, Sparkles, Camera, Search, Building2, Star } from "lucide-react"
 import type { OnboardingData } from "@/app/onboarding/page"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 interface WelcomeToDashboardProps {
   data: OnboardingData
-  onComplete: () => void
 }
 
-export default function WelcomeToDashboard({ data, onComplete }: WelcomeToDashboardProps) {
+export default function WelcomeToDashboard({ data }: WelcomeToDashboardProps) {
+  const router = useRouter()
+  const [isNavigating, setIsNavigating] = useState(false)
+
+  const onComplete = () => {
+    localStorage.removeItem("snapscout-onboarding")
+  }
+
+  const handleGoToDashboard = () => {
+    setIsNavigating(true)
+    onComplete()
+    router.push("/dashboard")
+  }
+
   const getUserTypeIcon = () => {
     switch (data.userType) {
-      case 'creator': return Camera
-      case 'client': return Search
-      case 'studio': return Building2
-      default: return Camera
+      case "creator":
+        return Camera
+      case "client":
+        return Search
+      case "studio":
+        return Building2
+      default:
+        return Camera
     }
   }
 
   const getUserTypeLabel = () => {
     switch (data.userType) {
-      case 'creator': return 'Creative Professional'
-      case 'client': return 'Client/Scout'
-      case 'studio': return 'Studio Owner'
-      default: return 'User'
+      case "creator":
+        return "Creative Professional"
+      case "client":
+        return "Client/Scout"
+      case "studio":
+        return "Studio Owner"
+      default:
+        return "User"
     }
   }
 
   const getWelcomeMessage = () => {
     switch (data.userType) {
-      case 'creator': return "Your creative journey starts now!"
-      case 'client': return "Ready to discover amazing talent!"
-      case 'studio': return "Your studio is ready to shine!"
-      default: return "Welcome to SnapScout!"
+      case "creator":
+        return "Your creative journey starts now!"
+      case "client":
+        return "Ready to discover amazing talent!"
+      case "studio":
+        return "Your studio is ready to shine!"
+      default:
+        return "Welcome to SnapScout!"
     }
   }
 
   const getNextSteps = () => {
     switch (data.userType) {
-      case 'creator': return [
-        "Complete your portfolio",
-        "Set your availability",
-        "Upload sample work",
-        "Connect with clients"
-      ]
-      case 'client': return [
-        "Browse creative profiles",
-        "Save your favorites",
-        "Post your first project",
-        "Start conversations"
-      ]
-      case 'studio': return [
-        "Add equipment listings",
-        "Upload studio photos",
-        "Set booking rates",
-        "Connect with creatives"
-      ]
-      default: return [
-        "Explore the platform",
-        "Complete your profile",
-        "Connect with others",
-        "Start creating"
-      ]
+      case "creator":
+        return ["Complete your portfolio", "Set your availability", "Upload sample work", "Connect with clients"]
+      case "client":
+        return ["Browse creative profiles", "Save your favorites", "Post your first project", "Start conversations"]
+      case "studio":
+        return ["Add equipment listings", "Upload studio photos", "Set booking rates", "Connect with creatives"]
+      default:
+        return ["Explore the platform", "Complete your profile", "Connect with others", "Start creating"]
     }
   }
 
@@ -81,18 +91,18 @@ export default function WelcomeToDashboard({ data, onComplete }: WelcomeToDashbo
           transition={{ type: "spring", stiffness: 200, damping: 20 }}
           className="relative"
         >
-          <div className="w-32 h-32 mx-auto bg-gradient-to-br from-primary to-yellow-400 rounded-full flex items-center justify-center relative">
+          <div className="w-32 h-32 mx-auto bg-gradient-to-br from-red-500 to-yellow-500 rounded-full flex items-center justify-center relative">
             <Icon className="w-16 h-16 text-white" />
-            
+
             {/* Sparkle Effects */}
             <motion.div
               animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
               className="absolute inset-0"
             >
               <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-yellow-400" />
               <Sparkles className="absolute -bottom-2 -left-2 w-4 h-4 text-green-500" />
-              <Sparkles className="absolute top-1/2 -left-4 w-5 h-5 text-primary" />
+              <Sparkles className="absolute top-1/2 -left-4 w-5 h-5 text-red-500" />
             </motion.div>
           </div>
         </motion.div>
@@ -105,21 +115,13 @@ export default function WelcomeToDashboard({ data, onComplete }: WelcomeToDashbo
           className="space-y-4"
         >
           <div className="space-y-2">
-            <h1 className="text-5xl font-bold text-gray-900">
-              🎉 Welcome!
-            </h1>
-            <h2 className="text-3xl font-bold text-gray-900">
-              {data.displayName}
-            </h2>
+            <h1 className="text-5xl font-bold text-gray-900">🎉 Welcome!</h1>
+            <h2 className="text-3xl font-bold text-gray-900">{data.displayName}</h2>
           </div>
-          
-          <p className="text-xl text-gray-700">
-            {getWelcomeMessage()}
-          </p>
 
-          <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-2">
-            {getUserTypeLabel()}
-          </Badge>
+          <p className="text-xl text-gray-700">{getWelcomeMessage()}</p>
+
+          <Badge className="bg-red-100 text-red-700 border-red-200 px-4 py-2">{getUserTypeLabel()}</Badge>
         </motion.div>
 
         {/* Next Steps */}
@@ -132,12 +134,10 @@ export default function WelcomeToDashboard({ data, onComplete }: WelcomeToDashbo
             <CardContent className="p-8 space-y-6">
               <div className="flex items-center justify-center space-x-2 mb-4">
                 <Star className="w-6 h-6 text-yellow-500" />
-                <h3 className="text-xl font-semibold text-gray-900">
-                  Your next steps:
-                </h3>
+                <h3 className="text-xl font-semibold text-gray-900">Your next steps:</h3>
                 <Star className="w-6 h-6 text-yellow-500" />
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {getNextSteps().map((step, index) => (
                   <motion.div
@@ -164,17 +164,25 @@ export default function WelcomeToDashboard({ data, onComplete }: WelcomeToDashbo
           className="space-y-4"
         >
           <Button
-            onClick={onComplete}
-            className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 text-lg font-semibold shadow-lg"
+            onClick={handleGoToDashboard}
+            disabled={isNavigating}
+            className="bg-red-500 hover:bg-red-600 text-white px-8 py-4 text-lg font-semibold shadow-lg transition-colors disabled:opacity-75"
             size="lg"
           >
-            Go to Dashboard
-            <ArrowRight className="w-5 h-5 ml-2" />
+            {isNavigating ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3" />
+                Navigating...
+              </>
+            ) : (
+              <>
+                Go to Dashboard
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </>
+            )}
           </Button>
 
-          <p className="text-sm text-gray-600">
-            You can always complete your profile later from your dashboard
-          </p>
+          <p className="text-sm text-gray-600">You can always complete your profile later from your dashboard</p>
         </motion.div>
       </div>
     </div>
