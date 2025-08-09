@@ -3,6 +3,14 @@ import { createClient } from "@supabase/supabase-js"
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    return window.location.origin
+  }
+  // For server-side calls, use the environment variable
+  return process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:34837"
+}
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export type User = {
@@ -20,7 +28,7 @@ export const signUp = async (email: string, password: string) => {
     email,
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: `${getBaseUrl()}/auth/callback`,
     },
   })
   return { data, error }
@@ -41,7 +49,7 @@ export const signOut = async () => {
 
 export const resetPassword = async (email: string) => {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/auth/reset-password`,
+    redirectTo: `${getBaseUrl()}/auth/reset-password`,
   })
   return { data, error }
 }
